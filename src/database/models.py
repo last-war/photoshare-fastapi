@@ -38,7 +38,7 @@ class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True)
     image_url = Column(String(255), unique=True, nullable=False)
-    user_id = Column('user_id', ForeignKey(User.id, ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey(User.id, ondelete="CASCADE"))
     created_at = Column('created_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime, default=func.now())
     description = Column(String(255))
@@ -50,8 +50,8 @@ class Image(Base):
 class Comment(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True)
-    user_id = Column('user_id', ForeignKey(User.id, ondelete="CASCADE"))
-    image_id = Column('image_id', ForeignKey(Image.id, ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey(User.id, ondelete="CASCADE"))
+    image_id = Column(Integer, ForeignKey(Image.id, ondelete="CASCADE"))
     created_at = Column('created_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
     comment_text = Column(Text)
@@ -69,8 +69,8 @@ class Rating(Base):
     __tablename__ = 'ratings'
     id = Column(Integer, primary_key=True)
     rate = Column("rate", Integer, default=0)
-    user_id = Column('user_id', ForeignKey(User.id, ondelete="CASCADE"))
-    image_id = Column('image_id', ForeignKey(Image.id, ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey(User.id, ondelete="CASCADE"))
+    image_id = Column(Integer, ForeignKey(Image.id, ondelete="CASCADE"))
     user = relationship('User', backref="ratings")
     image = relationship('Image', backref="ratings")
 
