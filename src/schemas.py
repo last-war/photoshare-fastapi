@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, EmailStr
 
+from src.database.models import Tag
+
 
 class UserModel(BaseModel):
     pass
@@ -44,11 +46,16 @@ class CommentModel(CommentBase):
      
 
 class ImageModel(BaseModel):
-    pass
+    description: str
+    tags: Optional[Tag] = None
 
 
 class ImageResponse(ImageModel):
     id: int
+    image_url: str
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True

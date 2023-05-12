@@ -15,6 +15,7 @@ python-dotenv = "^1.0.0"
 alembic = "^1.10.4"
 pydantic = {extras = ["dotenv", "email"], version = "^1.10.7"}
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
+cloudinary = "^1.32.0"
 
 
 [build-system]
