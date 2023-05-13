@@ -37,31 +37,23 @@ class CloudImage:
         return f"photoshare/{name}"
 
     @staticmethod
-    def upload(file, public_id: str):
+    def upload(file, file_name: str):
         """
         The upload function takes a file and public_id as arguments.
         The function then uploads the file to Cloudinary using the public_id provided.
         If no public_id is provided, one will be generated automatically.
 
         :param file: Upload a file to the cloudinary server
-        :param public_id: str: Set the public id of the image
+        :param file_name: str: Set the public id of the image
         :return: A dictionary of data about the uploaded image
         :doc-author: Trelent
         """
-        r = cloudinary.uploader.upload(file, public_id=public_id, overwrite=True)
+        r = cloudinary.uploader.upload(file, public_id=file_name)
         return r
 
     @staticmethod
-    def get_url_for_image(public_id, r):
-        """
-        The get_url_for_avatar function takes in a public_id and an r (which is the result of a cloudinary.api.resource call)
-        and returns the URL for that avatar image, which will be used to display it on the page.
-
-        :param public_id: Identify the image in cloudinary
-        :param r: Get the version of the image
-        :return: The url of the avatar image
-        :doc-author: Trelent
-        """
-        src_url = cloudinary.CloudinaryImage(public_id) \
-            .build_url(width=250, height=250, crop='fill', version=r.get('version'))
-        return src_url
+    def get_url_for_image(file_name):
+        # src_url = cloudinary.CloudinaryImage(file_name) \
+        #     .build_url(width=250, height=250, crop='fill', version=r.get('version'))
+        src_url = cloudinary.utils.cloudinary_url(file_name, resource_type="private", type="authenticated")
+        return src_url[0]

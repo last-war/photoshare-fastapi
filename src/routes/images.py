@@ -24,5 +24,7 @@ async def create_image(body: ImageModel,
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
     file_name = CloudImage.generate_name_image()
-    image = await repository_images.create(body, file, current_user, db)
+    CloudImage.upload(file.file, file_name)
+    image_url = CloudImage.get_url_for_image(file_name)
+    image = await repository_images.create(body, image_url, current_user, db)
     return image

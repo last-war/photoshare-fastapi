@@ -1,9 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel, Field, EmailStr
-
-from src.database.models import Tag
+from pydantic import BaseModel, Field, EmailStr, BaseConfig
 
 
 class UserModel(BaseModel):
@@ -46,8 +44,11 @@ class CommentModel(CommentBase):
      
 
 class ImageModel(BaseModel):
-    description: str
-    tags: Optional[Tag] = None
+    description: str = Field('description', min_length=20, max_length=255)
+    tags: str = Field('tags', min_length=5, max_length=25)
+
+    class Config(BaseConfig):
+        arbitrary_types_allowed = True
 
 
 class ImageResponse(ImageModel):
@@ -85,5 +86,3 @@ class TagResponse(TagModel):
 
 class RequestEmail(BaseModel):
     email: EmailStr
-
-
