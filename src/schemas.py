@@ -80,11 +80,12 @@ class RatingResponse(RatingModel):
 
 
 class TagModel(BaseModel):
-    pass
+    tag_name: str = Field(max_length=30)
 
 
 class TagResponse(TagModel):
     id: int
+    tag_name: str
 
     class Config:
         orm_mode = True
