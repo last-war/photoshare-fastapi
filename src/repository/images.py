@@ -10,10 +10,39 @@ Asynchronous functions for interaction with the database with the images table.
 """
 
 
-async def get_images(limit: int, offset: int, user: User, db: Session):
-    images = db.query(Image).filter(and_(Image.user_id == user.id, Image.is_deleted == False)).\
+async def get_images(limit: int, offset: int, db: Session):
+    """
+    The get_images function returns a list of images from the database.
+        The function takes in three parameters: limit, offset, and db.
+        Limit is an integer that specifies how many images to return at once.
+        Offset is an integer that specifies where to start returning images from (i.e., if you want to get the next 10 results after your first query).
+            This allows for pagination of results so we don't have to return all results at once and overload our server with requests.
+
+    :param limit: int: Limit the number of images returned
+    :param offset: int: Specify the offset from which to start
+    :param db: Session: Pass the database session to the function
+    :return: A list of images
+    :doc-author: Trelent
+    """
+    images = db.query(Image).filter(Image.is_deleted == False).\
         order_by(desc(Image.created_at)).limit(limit).offset(offset).all()
     return images
+
+
+async def get_image(image_id: int, db: Session):
+    """
+    The get_image function takes in an image_id and a database session.
+    It then queries the Image table for the image with that id, as long as it is not deleted.
+    The function returns the first result of this query.
+
+    :param image_id: int: Specify the image id of the image that is being requested
+    :param db: Session: Pass the database session to the function
+    :return: The first image with the specified id that is not deleted
+    :doc-author: Trelent
+    """
+    image = db.query(Image).filter(and_(Image.id == image_id, Image.is_deleted == False)).\
+        order_by(desc(Image.created_at)).first()
+    return image
 
 
 async def create(body: ImageModel, image_url: str, user: User, db: Session):
