@@ -65,8 +65,34 @@ class CloudImage:
         """
         r = cloudinary.uploader.upload(file, public_id=public_id, overwrite=overwrite)
         return r
+    
+    @staticmethod
+    def get_url_for_avatar(public_id, r):
+        """
+        The get_url_for_avatar function takes in a public_id and an r
+        (which is the result of a cloudinary.api.resource call)
+        and returns the URL for that avatar image, which will be used to display it on the page.
 
+        :param public_id: Identify the image in cloudinary
+        :param r: Get the version of the image
+        :return: A url
+        :doc-author: Trelent
+        """
+        src_url = cloudinary.CloudinaryImage(public_id) \
+            .build_url(width=250, height=250, crop='fill', version=r.get('version'))
+        return src_url
+    
     @staticmethod
     def get_url_for_image(file_name):
+        """
+        The get_url_for_avatar function takes in a public_id and an r
+        (which is the result of a cloudinary.api.resource call)
+        and returns the URL for that avatar image, which will be used to display it on the page.
+
+        :param public_id: Identify the image in cloudinary
+        :param r: Get the version of the image
+        :return: A url
+        :doc-author: Trelent
+        """
         src_url = cloudinary.utils.cloudinary_url(file_name)
         return src_url[0]
