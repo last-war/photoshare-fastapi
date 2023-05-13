@@ -16,9 +16,10 @@ alembic = "^1.10.4"
 pydantic = {extras = ["dotenv", "email"], version = "^1.10.7"}
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
-jose = "^1.0.0"
 libgravatar = "^1.0.4"
 cloudinary = "^1.32.0"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.6"
 
 
 [build-system]
