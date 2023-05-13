@@ -8,6 +8,7 @@ from src.database.models import User
 from src.schemas import ImageModel, ImageResponse
 from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
+from src.services.auth import auth_service
 
 
 """
