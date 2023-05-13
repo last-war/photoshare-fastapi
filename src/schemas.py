@@ -5,7 +5,16 @@ from pydantic import BaseModel, Field, EmailStr, BaseConfig
 
 
 class UserModel(BaseModel):
-    pass
+    username: str = Field(min_length=4, max_length=12)
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=15)
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    avatar: str
 
 
 class UserDb(BaseModel):
@@ -17,15 +26,10 @@ class UserDb(BaseModel):
         orm_mode = True
 
 
-class UserResponse(BaseModel):
-    user: UserDb
-    status: str = 'User added'
-
-
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
-    token_type: str = 'bearer'
+    token_type: str = "bearer"
 
       
 class CommentBase(BaseModel):
