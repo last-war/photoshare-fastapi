@@ -73,9 +73,3 @@ class Rating(Base):
     image_id = Column(Integer, ForeignKey(Image.id, ondelete="CASCADE"))
     user = relationship('User', backref="ratings")
     image = relationship('Image', backref="ratings")
-
-
-
-
-
-
