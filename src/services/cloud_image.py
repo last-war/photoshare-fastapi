@@ -53,7 +53,5 @@ class CloudImage:
 
     @staticmethod
     def get_url_for_image(file_name):
-        # src_url = cloudinary.CloudinaryImage(file_name) \
-        #     .build_url(width=250, height=250, crop='fill', version=r.get('version'))
-        src_url = cloudinary.utils.cloudinary_url(file_name, resource_type="private", type="authenticated")
+        src_url = cloudinary.utils.cloudinary_url(file_name)
         return src_url[0]
