@@ -50,17 +50,17 @@ async def update_token(user: User, refresh_token: str | None, db: Session) -> No
     db.commit()
 
 
-async def confirmed_email(email: str, db: Session) -> None:
+async def update_avatar(email, url: str, db: Session) -> User:
     """
-    The confirmed_email function takes in an email and a database session,
-    and sets the confirmed field of the user with that email to True.
+    The update_avatar function updates the avatar of a user.
 
-
-    :param email: str: Get the email of the user who is trying to confirm their account
+    :param email: Find the user in the database
+    :param url: str: Pass in the url of the avatar that we want to update
     :param db: Session: Pass the database session to the function
-    :return: None
+    :return: A user object
     :doc-author: Trelent
     """
     user = await get_user_by_email(email, db)
-    user.confirmed = True
+    user.avatar = url
     db.commit()
+    return user
