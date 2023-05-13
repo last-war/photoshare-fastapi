@@ -9,7 +9,7 @@ from src.routes import users, auth, comments, tags, images
 app = FastAPI()
 
 
-@app.get("/", response_class=HTMLResponse, description='Main page')
+@app.get("/", description='Main page')
 def root():
     return {"message": "Welcome to the FAST API from team 6"}
 

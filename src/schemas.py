@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, BaseConfig
 
 
 class UserModel(BaseModel):
@@ -58,11 +58,19 @@ class CommentModel(CommentBase):
      
 
 class ImageModel(BaseModel):
-    pass
+    description: str = Field('description', min_length=20, max_length=255)
+    # TODO tags:
+
+    class Config(BaseConfig):
+        arbitrary_types_allowed = True
 
 
 class ImageResponse(ImageModel):
     id: int
+    image_url: str
+    user_id: int
+    created_at: datetime
+    updated_at: Optional[datetime]
 
     class Config:
         orm_mode = True
