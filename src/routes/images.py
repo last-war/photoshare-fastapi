@@ -37,7 +37,7 @@ async def create_image(description: str = Form(),
     :doc-author: Trelent
     """
     file_name = CloudImage.generate_name_image()
-    CloudImage.upload(image_file.file, file_name)
+    CloudImage.upload(image_file.file, file_name, overwrite=False)
     image_url = CloudImage.get_url_for_image(file_name)
     body = ImageModel(description=description)
     image = await repository_images.create(body, image_url, current_user, db)
