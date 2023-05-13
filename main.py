@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from src.database.db import get_db
-from src.routes import users, comments, tags, images, ratings
+from src.routes import users, auth, comments, tags, images, ratings
 
 app = FastAPI()
 
@@ -34,6 +34,7 @@ def healthchecker(db: Session = Depends(get_db)):
 
 
 app.include_router(users.router, prefix='/api')
+app.include_router(auth.router, prefix='/api')
 app.include_router(comments.router, prefix='/api')
 app.include_router(images.router, prefix='/api')
 app.include_router(tags.router, prefix='/api')

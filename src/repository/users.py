@@ -29,7 +29,7 @@ async def create_user(body: UserModel, db: Session) -> User:
     :doc-author: Trelent
     """
     g = Gravatar(body.email)
-    new_user = User(**body.dict(), avatar=g.get_image())
+    new_user = User(**body.dict(), user_pic_url=g.get_image())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
