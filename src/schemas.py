@@ -1,22 +1,30 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 
-from pydantic import BaseModel, Field, EmailStr, BaseConfig
+from pydantic import BaseModel, Field, EmailStr
 
 
 class UserModel(BaseModel):
-    name: str = Field(min_length=4, max_length=12)
     login: str = Field(min_length=4, max_length=12)
     email: EmailStr
-    password_checksum: str = Field(min_length=6, max_length=15)
+    password_checksum: str = Field(min_length=6)
 
 
 class UserResponse(BaseModel):
     id: int
-    name: str
     login: str
     email: str
-    user_pic_url: str
+    role: int
+    created_at: datetime
+    updated_at: Optional[datetime]
+    user_pic_url: Optional[str]
+    name: Optional[str]
+    is_active: bool
+    password_checksum: str
+    refresh_token: Optional[str]
+
+    class Config:
+        orm_mode = True
 
 
 class UserDb(BaseModel):
