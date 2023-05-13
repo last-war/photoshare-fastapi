@@ -51,7 +51,8 @@ class CommentModel(CommentBase):
 
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags: str = Field('tags', min_length=5, max_length=25)
+    # tags: str = Optional[Field('tags', min_length=5, max_length=25)] = None
+    tags: Optional[str] = Field(None, min_length=4, max_length=25)
 
     class Config(BaseConfig):
         arbitrary_types_allowed = True

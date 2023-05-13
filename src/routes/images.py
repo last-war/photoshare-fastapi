@@ -39,3 +39,11 @@ async def remove_image(image_id: int = Path(ge=1),
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return image
+
+
+@router.patch("/description_{images_id}")
+async def update_description_image(image_id: int = Path(ge=1),
+                                   description: str = ImageModel,
+                                   current_user: User = Depends(auth_service.get_current_user),
+                                   db: Session = Depends(get_db)):
+    pass
