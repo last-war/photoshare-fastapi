@@ -23,7 +23,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     login = Column(String(50), unique=True)
     email = Column(String(150), unique=True)
-    role = Column(Integer, default=UserRole.User.name)
+    role = Column(Integer, default=UserRole.User.value)
     created_at = Column('created_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime, default=func.now())
     user_pic_url = Column(String(255), nullable=True)

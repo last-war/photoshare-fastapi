@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from src.database.db import get_db
-from src.routes import users, comments, images  # ratings, tags
+from src.routes import users, auth, images
 
 app = FastAPI()
 
@@ -33,7 +33,8 @@ def healthchecker(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Error connecting to the database")
 
 
-# app.include_router(users.router, prefix='/api')
+app.include_router(users.router, prefix='/api')
+app.include_router(auth.router, prefix='/api')
 # app.include_router(comments.router, prefix='/api')
 app.include_router(images.router, prefix='/api')
 # app.include_router(tags.router, prefix='/api')

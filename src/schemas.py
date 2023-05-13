@@ -5,16 +5,18 @@ from pydantic import BaseModel, Field, EmailStr, BaseConfig
 
 
 class UserModel(BaseModel):
-    username: str = Field(min_length=4, max_length=12)
+    name: str = Field(min_length=4, max_length=12)
+    login: str = Field(min_length=4, max_length=12)
     email: EmailStr
-    password: str = Field(min_length=6, max_length=15)
+    password_checksum: str = Field(min_length=6, max_length=15)
 
 
 class UserResponse(BaseModel):
     id: int
-    username: str
+    name: str
+    login: str
     email: str
-    avatar: str
+    user_pic_url: str
 
 
 class UserDb(BaseModel):

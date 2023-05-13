@@ -28,7 +28,7 @@ async def signup(body: UserModel, request: Request, db: Session = Depends(get_db
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
-    body.password = auth_service.get_password_hash(body.password)
+    body.password_checksum = auth_service.get_password_hash(body.password_checksum)
     new_user = await repository_users.create_user(body, db)
     return new_user
 
