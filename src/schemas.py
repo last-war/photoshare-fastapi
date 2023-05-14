@@ -77,11 +77,13 @@ class ImageResponse(ImageModel):
 
 
 class RatingModel(BaseModel):
-    pass
+    rate: int
 
 
 class RatingResponse(RatingModel):
     id: int
+    user_id: int
+    image_id: int
 
     class Config:
         orm_mode = True
