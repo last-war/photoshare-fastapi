@@ -77,18 +77,20 @@ async def create_transformation_image(body: ImageTransformationModel,
 
 @router.get("/", response_model=List[ImageResponse])
 async def get_images(limit: int = Query(10, le=50), offset: int = 0,
+                     current_user: User = Depends(auth_service.get_current_user),
                      db: Session = Depends(get_db)):
     """
     The get_images function returns a list of images.
 
     :param limit: int: Limit the number of images returned
-    :param le: Limit the number of images returned
-    :param offset: int: Skip the first n images
-    :param db: Session: Pass the database session to the get_image function
+    :param le: Limit the number of images returned to 50
+    :param offset: int: Specify the number of records to skip before returning results
+    :param current_user: User: Get the current user from the database
+    :param db: Session: Get a database session
     :return: A list of images
     :doc-author: Trelent
     """
-    images = await repository_images.get_images(limit, offset, db)
+    images = await repository_images.get_images(limit, offset, current_user, db)
     if images is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return images
@@ -96,16 +98,21 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
 
 @router.get("/{image_id}", response_model=ImageResponse)
 async def get_images(image_id: int = Path(ge=1),
+                     current_user: User = Depends(auth_service.get_current_user),
                      db: Session = Depends(get_db)):
     """
-    The get_images function returns a list of images.
+    The get_images function is a GET request that returns the image with the given ID.
+    The function takes an optional image_id parameter, which defaults to 1 if not provided.
+    It also takes a current_user parameter, which is obtained from auth_service and db parameters,
+    which are obtained from get_db.
 
-    :param image_id: int: Specify the id of the image to be retrieved
-    :param db: Session: Pass the database session to the function
-    :return: A single image
+    :param image_id: int: Specify the id of the image that is being requested
+    :param current_user: User: Get the current user from the database
+    :param db: Session: Pass the database session to the repository
+    :return: A list of images
     :doc-author: Trelent
     """
-    image = await repository_images.get_image(image_id, db)
+    image = await repository_images.get_image(image_id, current_user, db)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return image
