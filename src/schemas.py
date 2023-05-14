@@ -27,6 +27,15 @@ class UserResponse(BaseModel):
         orm_mode = True
 
 
+class UserChangeRole(BaseModel):
+    id: int
+    role: int
+    updated_at: Optional[datetime]
+
+    class Config:
+        orm_mode = True
+
+
 class UserDb(BaseModel):
     id: int
     email: str

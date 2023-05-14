@@ -5,7 +5,7 @@ from src.database.db import get_db
 from src.database.models import User, UserRole
 from src.repository import users as repository_users
 from src.services.auth import auth_service
-from src.schemas import UserResponse, UserModel
+from src.schemas import UserResponse, UserModel, UserChangeRole
 from src.services.cloud_image import CloudImage
 from src.services.roles import RoleAccess
 
@@ -59,6 +59,18 @@ async def update_user(
 @router.put("/update_user_by_admin", response_model=UserResponse)
 async def update_user_by_admin(
         body: UserResponse,
+        user: User = Depends(auth_service.get_current_user),
+        db: Session = Depends(get_db)):
+    user = await repository_users.update_user_by_admin(body, user, db)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="NOT_FOUND")
+    return user
+
+
+@router.put("/change_role", response_model=UserChangeRole)
+async def change_role(
+        body: UserChangeRole,
         user: User = Depends(auth_service.get_current_user),
         db: Session = Depends(get_db)):
     user = await repository_users.update_user_by_admin(body, user, db)

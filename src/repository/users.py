@@ -4,7 +4,7 @@ from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
 from src.database.models import User, UserRole
-from src.schemas import UserModel, UserResponse
+from src.schemas import UserModel, UserResponse, UserChangeRole
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
@@ -76,7 +76,7 @@ async def update_user(body: UserResponse, user: User, db: Session) -> User | Non
     Logged-in user can update his information.
 
     :param body: A set of user attributes to update.
-    :type body: UserBase
+    :type body: UserResponse
     :param user: Logged-in user.
     :type user: User.
     :param db: Database session.
@@ -101,7 +101,7 @@ async def update_user_by_admin(body: UserResponse, user: User, db: Session) -> U
     Logged-in admin can update any profile.
 
     :param body: A set of user attributes to update.
-    :type body: UserUpdate
+    :type body: UserResponse
     :param user: User.
     :type user: User.
     :param db: Database session.
@@ -109,7 +109,7 @@ async def update_user_by_admin(body: UserResponse, user: User, db: Session) -> U
     :return: Updated user.
     :rtype: User or None
     """
-    user_to_update = db.query(User).filter(User.login == body.login).first()
+    user_to_update = db.query(User).filter(User.id == body.id).first()
     if user_to_update:
         if user.role == RoleAccess([UserRole.Admin]):
             user_to_update.login = body.login
@@ -119,6 +119,29 @@ async def update_user_by_admin(body: UserResponse, user: User, db: Session) -> U
             user_to_update.role = body.role
             user_to_update.user_pic_url = body.user_pic_url
             user_to_update.password_checksum = auth_service.get_password_hash(body.password_checksum)
+            user_to_update.updated_at = datetime.now()
+            db.commit()
+        return user_to_update
+    return None
+
+
+async def change_role(body: UserChangeRole, user: User, db: Session) -> User | None:
+    """
+    Logged-in admin can change role of any profile by ID.
+
+    :param body: A set of user new role.
+    :type body: UserChangeRole
+    :param user: User.
+    :type user: User.
+    :param db: Database session.
+    :type db: Session.
+    :return: Updated user.
+    :rtype: User or None
+    """
+    user_to_update = db.query(User).filter(User.id == body.id).first()
+    if user_to_update:
+        if user.role == RoleAccess([UserRole.Admin]):
+            user_to_update.role = body.role
             user_to_update.updated_at = datetime.now()
             db.commit()
         return user_to_update
