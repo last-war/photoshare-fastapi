@@ -1,8 +1,12 @@
 import hashlib
+import re
 from uuid import uuid4
 
 import cloudinary
 import cloudinary.uploader
+from cloudinary import api
+from fastapi import HTTPException
+from starlette import status
 
 from src.conf.config import settings
 
@@ -54,12 +58,12 @@ class CloudImage:
     @staticmethod
     def upload(file, public_id: str, overwrite=True):
         """
-        The upload function takes a file and public_id as arguments.
-        The function then uploads the file to Cloudinary using the public_id provided.
-        If no public_id is provided, one will be generated automatically.
+        The upload function takes a file and uploads it to the cloudinary server.
+            The public_id is the name of the file on cloudinary, and overwrite=True means that if there is already a file with that name, it will be overwritten.
 
         :param file: Specify the file to be uploaded
-        :param public_id: str: Set the public id of the image
+        :param public_id: str: Specify the public id of the image
+        :param overwrite: Determine whether the image should be overwritten if it already exists
         :return: A dictionary with the following keys:
         :doc-author: Trelent
         """
@@ -85,14 +89,74 @@ class CloudImage:
     @staticmethod
     def get_url_for_image(file_name):
         """
-        The get_url_for_avatar function takes in a public_id and an r
-        (which is the result of a cloudinary.api.resource call)
-        and returns the URL for that avatar image, which will be used to display it on the page.
+        The get_url_for_image function takes a file name as an argument and returns the url for that image.
+        The function uses the cloudinary library to generate a url from the file name.
 
-        :param public_id: Identify the image in cloudinary
-        :param r: Get the version of the image
-        :return: A url
+        :param file_name: Specify the name of the file that is to be uploaded
+        :return: The url for the image
         :doc-author: Trelent
         """
         src_url = cloudinary.utils.cloudinary_url(file_name)
         return src_url[0]
+
+    @staticmethod
+    def get_transformation_image(public_id: str, transformation: str):
+        """
+        The get_transformation_image function takes in a public_id and transformation string,
+            then returns the url of the transformed image. If no transformation is found, it returns None.
+
+        :param public_id: str: Get the public id of the image
+        :param transformation: str: Get the transformation name from the transformation class
+        :return: The url of the transformed image
+        :doc-author: Trelent
+        """
+        public_id = re.search(r'(?<=/v\d/).+', public_id).group(0)
+        if transformation in Transformation.name.keys():
+            transformation_image_url = cloudinary.utils.cloudinary_url(public_id,
+                                                                       transformation=[Transformation.name.get(transformation)])[0]
+            return transformation_image_url
+
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
+
+class Standart:
+    name = "standart"
+    transformation = {"width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Radius:
+    name = "radius"
+    transformation = {"radius": "max", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Grayscale:
+    name = "grayscale"
+    transformation = {"effect": "grayscale", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Cartoonify:
+    name = "cartoonify"
+    transformation = {"effect": "cartoonify", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Vectorize:
+    name = "vectorize"
+    transformation = {"effect": "vectorize:colors:2:detail:0.05", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Transformation:
+    """
+    Transformation images cloudinary.
+    grayscale
+    cartoonify
+    radius
+    standart
+    vectorize
+    """
+    name = {
+        "grayscale": Grayscale.transformation,
+        "cartoonify": Cartoonify.transformation,
+        "radius": Radius.transformation,
+        "standart": Standart.transformation,
+        "vectorize": Vectorize.transformation
+    }
