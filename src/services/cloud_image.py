@@ -5,6 +5,8 @@ from uuid import uuid4
 import cloudinary
 import cloudinary.uploader
 from cloudinary import api
+from fastapi import HTTPException
+from starlette import status
 
 from src.conf.config import settings
 
@@ -114,21 +116,39 @@ class CloudImage:
                                                                        transformation=[Transformation.name.get(transformation)])[0]
             return transformation_image_url
 
-        return None
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
+
+class Standart:
+    name = "standart"
+    transformation = {"width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Radius:
+    name = "radius"
+    transformation = {"radius": "max", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
 
 
 class Grayscale:
     name = "grayscale"
-    transformation = {"effect": "grayscale", "width": 500, "height": 500, "crop": "fill"}
+    transformation = {"effect": "grayscale", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
 
 
 class Cartoonify:
     name = "cartoonify"
-    transformation = {"effect": "cartoonify", "width": 500, "height": 500, "crop": "fill"}
+    transformation = {"effect": "cartoonify", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
+
+
+class Vectorize:
+    name = "vectorize"
+    transformation = {"effect": "vectorize:colors:2:detail:0.05", "width": 500, "height": 500, "gravity": "faces", "crop": "fill"}
 
 
 class Transformation:
     name = {
         "grayscale": Grayscale.transformation,
         "cartoonify": Cartoonify.transformation,
+        "radius": Radius.transformation,
+        "standart": Standart.transformation,
+        "vectorize": Vectorize.transformation
     }

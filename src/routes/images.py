@@ -64,9 +64,12 @@ async def create_transformation_image(body: ImageTransformationModel,
     :doc-author: Trelent
     """
     image = await repository_images.get_image_from_id(body.id, current_user, db)
+    if not image:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     transformation_image_url = CloudImage.get_transformation_image(image.image_url, body.transformation)
     body = ImageModel(description=image.description)  # TODO tags
-    if repository_images.get_image_from_url(transformation_image_url, current_user, db):
+    image_in_db = await repository_images.get_image_from_url(transformation_image_url, current_user, db)
+    if image_in_db:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Resource already exists")
     new_image = await repository_images.create(body, transformation_image_url, current_user, db)
     return new_image
