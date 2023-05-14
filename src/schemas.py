@@ -76,6 +76,11 @@ class ImageResponse(ImageModel):
         orm_mode = True
 
 
+class ImageTransformationModel(BaseModel):
+    id: int
+    transformation: str
+
+
 class RatingModel(BaseModel):
     pass
 

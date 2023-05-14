@@ -1,11 +1,12 @@
 from typing import List
 
+import cloudinary
 from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Body, Form
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.database.models import User
-from src.schemas import ImageModel, ImageResponse
+from src.schemas import ImageModel, ImageResponse, ImageTransformationModel
 from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
@@ -42,6 +43,33 @@ async def create_image(description: str = Form(),
     body = ImageModel(description=description)
     image = await repository_images.create(body, image_url, current_user, db)
     return image
+
+
+@router.post("/transformation", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
+async def create_transformation_image(body: ImageTransformationModel,
+                                      current_user: User = Depends(auth_service.get_current_user),
+                                      db: Session = Depends(get_db)):
+    """
+    The create_transformation_image function creates a new image transformation.
+        The function takes in the following parameters:
+            body (ImageTransformationModel): A JSON object containing the id of an existing image and a string representing
+                the desired transformation to be applied to that image. The possible transformations are as follows:
+                    &quot;blur&quot;, &quot;brightness&quot;, &quot;contrast&quot;, &quot;crop_center&quot;, &quot;flip_horizontal&quot; ,
+                    &quot;flip_vertical&quot; ,  	&quot;grayscale&quot; ,  	&quot;invert&quot;,&quot;pixelate&quot;,&quot;rotate90&quot;,&quot;rotate180&quot;,&quot;rotate270&quot;.
+
+    :param body: ImageTransformationModel: Get the id of the image to transform and
+    :param current_user: User: Get the current user from the database
+    :param db: Session: Access the database
+    :return: The image that was created
+    :doc-author: Trelent
+    """
+    image = await repository_images.get_image_from_id(body.id, current_user, db)
+    transformation_image_url = CloudImage.get_transformation_image(image.image_url, body.transformation)
+    body = ImageModel(description=image.description)  # TODO tags
+    if repository_images.get_image_from_url(transformation_image_url, current_user, db):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Resource already exists")
+    new_image = await repository_images.create(body, transformation_image_url, current_user, db)
+    return new_image
 
 
 @router.get("/", response_model=List[ImageResponse])

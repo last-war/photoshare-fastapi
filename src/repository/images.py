@@ -84,6 +84,21 @@ async def get_image_from_id(image_id: int, user: User, db: Session):
     return image
 
 
+async def get_image_from_url(image_url: str, user: User, db: Session):
+    """
+    The get_image_from_url function takes in an image_url and a user object, and returns the Image object
+        associated with that url. If no such image exists, it returns None.
+
+    :param image_url: str: Specify the image url
+    :param user: User: Get the user from the database
+    :param db: Session: Access the database
+    :return: The image with the given url and user
+    :doc-author: Trelent
+    """
+    image = db.query(Image).filter(and_(Image.image_url == image_url, Image.user_id == user.id)).first()
+    return image
+
+
 async def remove(image_id: int, user: User, db: Session):
     """
     The remove function is used to delete an image from the database.
