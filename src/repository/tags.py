@@ -1,5 +1,5 @@
 from src.schemas import TagModel
-from src.database.models import Tag, User, UserRole
+from src.database.models import Tag
 from sqlalchemy.orm import Session
 
 
