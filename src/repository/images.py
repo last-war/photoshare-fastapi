@@ -100,3 +100,23 @@ async def remove(image_id: int, user: User, db: Session):
         image.is_deleted = True
         db.commit()
     return image
+
+
+async def change_description(body: ImageModel, image_id: int, user: User, db: Session):
+    """
+    The change_description function takes in a body, image_id, user and db.
+        The function then gets the image from the id provided by the user.
+        If there is an image it changes its description to what was provided in the body.
+
+    :param body: ImageModel: Get the description from the request body
+    :param image_id: int: Get the image from the database
+    :param user: User: Check if the user is authorized to change the description
+    :param db: Session: Pass the database session to the function
+    :return: The image with the updated description
+    :doc-author: Trelent
+    """
+    image = await get_image_from_id(image_id, user, db)
+    if image:
+        image.description = body.description
+        db.commit()
+    return image
