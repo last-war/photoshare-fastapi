@@ -10,17 +10,12 @@ from src.schemas import CommentBase
 async def create_comment(image_id: int, body: CommentBase, db: Session, user: User) -> Comment:
     """
     The create_comment function creates a new comment in the database.
-    Args:
-    image_id (int): The id of the image to which this comment belongs.
-    body (CommentBase): The request body containing information about the new comment.
-    db (Session): A database session object used for querying and modifying data in our database.
 
     :param image_id: int: Specify the image that the comment is being made on
     :param body: CommentBase: Pass the comment_text from the request body to the function
     :param db: Session: Access the database
     :param user: User: Get the user id from the token
     :return: A comment object
-    :doc-author: Trelent
     """
     comment = Comment(user_id=user.id,
                       image_id=image_id,
@@ -44,7 +39,6 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
     :param db: Session: Access the database
     :param user: User: Check if the user is an admin or moderator,
     :return: A comment or none if the comment_id is invalid
-    :doc-author: Trelent
     """
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
     if comment:
@@ -58,16 +52,11 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
 async def delete_comment(comment_id: int, db: Session, user: User) -> Comment | None:
     """
     The delete_comment function deletes a comment from the database.
-    Args:
-    comment_id (int): The id of the comment to be deleted.
-    db (Session): A connection to the database.
-    user (User): The user who is deleting this post, must be an admin or moderator.
 
     :param comment_id: int: Find the comment to delete
     :param db: Session: Pass the database session to the function
     :param user: User: Check if the user is an admin or moderator
     :return: The deleted comment if it exists, and none otherwise
-    :doc-author: Trelent
     """
     if user.role not in [UserRole.Admin, UserRole.Moderator]:
         return
@@ -78,28 +67,36 @@ async def delete_comment(comment_id: int, db: Session, user: User) -> Comment | 
     return comment
 
 
-async def get_all_user_comments(user_id: int, db: Session) -> List[Comment] | None:
-    """
-    The get_all_user_comments function returns a list of all comments made by the user with the given id.
-    If no such user exists, None is returned.
+async def get_all_user_comments(skip: int, limit: int, user_id: int, db: Session) -> List[Comment] | None:
 
+    """
+    The get_all_user_comments function returns a list of comments made by the user with the given id.
+    The function takes in three parameters: skip, limit, and user_id.
+    Skip is an integer that determines how many comments to skip before returning results.
+    Limit is an integer that determines how many results to return after skipping a certain number of comments (determined by skip).
+    User_id is an integer that represents the id of the user whose comments are being returned.
+
+    :param skip: int: Skip the first n comments
+    :param limit: int: Limit the number of comments returned
     :param user_id: int: Filter the comments by user_id
-    :param db: Session: Get the database session
-    :return: A list of comments that belong to a particular user
-    :doc-author: Trelent
+    :param db: Session: Pass the database session to the function
+    :return: A list of comments that belong to a specific user
+
     """
-    return db.query(Comment).filter(Comment.user_id == user_id).all()
+    return db.query(Comment).filter(Comment.user_id == user_id).offset(skip).limit(limit).all()
 
 
-async def get_comments_by_image_id(image_id: int, db: Session) -> List[Comment] | None:
+async def get_comments_by_image_id (skip: int, limit: int, image_id: int, db: Session) -> List[Comment] | None:
+
     """
-    The get_comments_by_image_id function takes in an image_id and a database session,
-    and returns all comments associated with the given image_id. If no comments are found,
-    the function returns None.
+    The get_comments_by_image_id function returns a list of comments associated with the image_id provided.
+    The skip and limit parameters are used to paginate through the results.
 
+    :param skip: int: Skip a number of comments in the database
+    :param limit: int: Limit the number of comments returned
     :param image_id: int: Filter the comments by image_id
-    :param db: Session: Pass in the database session
-    :return: A list of comments associated with a specific image
-    :doc-author: Trelent
+    :param db: Session: Pass the database session to the function
+    :return: A list of comments for a particular image
+
     """
-    return db.query(Comment).filter(Comment.image_id == image_id).all()
+    return db.query(Comment).filter(Comment.image_id == image_id).offset(skip).limit(limit).all()
