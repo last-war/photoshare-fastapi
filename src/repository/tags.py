@@ -3,25 +3,46 @@ from src.database.models import Tag
 from sqlalchemy.orm import Session
 
 
-async def create_tag(body: TagModel, db: Session):
+def parse_tags(tags_string: str):
     """
-    Create a new tag in database just if not exist
+    parse a list of tags
 
-    :param body: request body containing information about new tag
-    :type body: TagModel
+    :param tags_string: string to parse
+    :type tags_string: str
+    :return: list of tags
+    :rtype: List
+    """
+    result = []
+    raw_tag = tags_string.split(' ')
+    for cur_tag in raw_tag:
+        if cur_tag[:1] == '#':
+            result.append(cur_tag[1:])
+    return result
+
+async def create_tag(tags_string, db: Session):
+    """
+    Create a new tags in database just if not exist
+    :param tags_string: string to parse
+    :type tags_string: str
     :param db: current session to db
     :type db: Session access to database
-    :return: added tag object
-    :rtype: Tag | None
+    :return: List[Tag]
+    :rtype: Tag
+
     """
-    tag = find_tag(body.tag_name, db)
-    if tag:
-        return tag
-    tag = Tag(**body.dict())
-    db.add(tag)
-    db.commit()
-    db.refresh(tag)
-    return tag
+    result = []
+    rw_tags = parse_tags(tags_string=tags_string)
+    for tag_name in rw_tags:
+        tag = find_tag(tag_name, db)
+        if tag:
+            result.append(tag)
+        else:
+            tag = Tag(tag_name=tag_name)
+            db.add(tag)
+            result.append(tag)
+            db.commit()
+            db.refresh(tag)
+    return result
 
 
 async def edit_tag(body: TagModel, db: Session) -> Tag | None:

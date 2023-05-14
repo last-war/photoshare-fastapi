@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 
-from src.database.models import User, UserRole
+from src.database.models import UserRole
 from src.repository import tags as repository_tag
 from src.schemas import TagResponse, TagModel
 from sqlalchemy.orm import Session
@@ -15,20 +15,20 @@ allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator])
 allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 
-@router.post("/", response_model=TagResponse, dependencies=Depends(allowed_operation_post),
+@router.post("/{tags_string}", response_model=TagResponse, dependencies=Depends(allowed_operation_post),
              status_code=status.HTTP_201_CREATED)
-async def create_tag(body: TagModel, db: Session = Depends(get_db)):
+async def create_tag(tags_string: str, db: Session = Depends(get_db)):
     """
     create new tag from tag_name
 
-    :param body: all need field to create
-    :type body: TagModel
+    :param tags_string: string to parse
+    :type tags_string: str
     :param db: current session to db
     :type db: Session access to database
     :return: tag object
     :rtype: Tag | None
     """
-    tag = await repository_tag.create_tag(body, db)
+    tag = await repository_tag.create_tag(tags_string, db)
     return tag
 
 
