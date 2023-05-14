@@ -145,6 +145,14 @@ class Vectorize:
 
 
 class Transformation:
+    """
+    Transformation images cloudinary.
+    grayscale
+    cartoonify
+    radius
+    standart
+    vectorize
+    """
     name = {
         "grayscale": Grayscale.transformation,
         "cartoonify": Cartoonify.transformation,
