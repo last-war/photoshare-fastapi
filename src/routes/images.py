@@ -99,9 +99,24 @@ async def remove_image(image_id: int = Path(ge=1),
     return image
 
 
-# @router.patch("/description_{images_id}")
-# async def update_description_image(image_id: int = Path(ge=1),
-#                                    description: str = ImageModel,
-#                                    current_user: User = Depends(auth_service.get_current_user),
-#                                    db: Session = Depends(get_db)):
-#     pass
+@router.patch("/description/{image_id}", response_model=ImageResponse)
+async def update_description_image(body: ImageModel,
+                                   image_id: int = Path(ge=1),
+                                   current_user: User = Depends(auth_service.get_current_user),
+                                   db: Session = Depends(get_db)):
+    """
+    The update_description_image function updates the description of an image.
+        The function takes in a body, which is an ImageModel object, and an image_id.
+        It also takes in a current_user and db objects as dependencies.
+
+    :param body: ImageModel: Get the new description for the image
+    :param image_id: int: Get the image id from the path
+    :param current_user: User: Get the current user
+    :param db: Session: Pass the database session to the repository
+    :return: The updated image
+    :doc-author: Trelent
+    """
+    image = await repository_images.change_description(body, image_id, current_user, db)
+    if image is None or image.is_deleted is True:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    return image
