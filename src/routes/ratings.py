@@ -35,3 +35,23 @@ async def create_rate(image_id: int, rate: int = Path(description="From one to f
     if new_rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     return new_rate
+
+
+@router.delete("/delete/{rate_id}", response_model=RatingResponse, dependencies=[Depends(allowed_operation_delete)])
+async def delete_rate(rate_id: int, db: Session = Depends(get_db),
+                      current_user: User = Depends(auth_service.get_current_user)):
+    """
+    The delete_rate function deletes a rate from the database.
+        The function takes in an integer, which is the id of the rate to be deleted.
+        It also takes in a Session object and a User object as parameters,
+        which are used to access and delete data from the database.
+
+    :param rate_id: int: Get the rate_id from the url
+    :param db: Session: Get the database session
+    :param current_user: User: Get the current user from the auth_service
+    :return: A rate object
+    """
+    deleted_rate = await repository_ratings.delete_rate(rate_id, db, current_user)
+    if deleted_rate is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rate not found or not available.")
+    return deleted_rate

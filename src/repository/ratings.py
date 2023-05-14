@@ -37,3 +37,22 @@ async def create_rate(image_id: int, rate: int, db: Session, user: User) -> Rati
         db.commit()
         db.refresh(new_rate)
         return new_rate
+    
+
+async def delete_rate(rate_id: int, db: Session, user: User) -> Rating | None:
+    """
+    The delete_rate function deletes a rating from the database.
+        Args:
+            rate_id (int): The id of the rating to be deleted.
+            db (Session): A connection to the database.
+
+    :param rate_id: int: Specify the id of the rate to be deleted
+    :param db: Session: Access the database
+    :param user: User: Check if the user is logged in
+    :return: The deleted rate
+    """
+    rate = db.query(Rating).filter(Rating.id == rate_id).first()
+    if rate:
+        db.delete(rate)
+        db.commit()
+    return rate
