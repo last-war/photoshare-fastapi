@@ -15,7 +15,7 @@ allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator])
 allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 
-@router.post("/{tags_string}", response_model=TagResponse, dependencies=Depends(allowed_operation_post),
+@router.post("/{tags_string}", response_model=TagResponse, dependencies=[Depends(allowed_operation_post)],
              status_code=status.HTTP_201_CREATED)
 async def create_tag(tags_string: str, db: Session = Depends(get_db)):
     """
@@ -32,7 +32,7 @@ async def create_tag(tags_string: str, db: Session = Depends(get_db)):
     return tag
 
 
-@router.get("/{tag_name}", response_model=TagResponse, dependencies=Depends(allowed_operation_get))
+@router.get("/{tag_name}", response_model=TagResponse, dependencies=[Depends(allowed_operation_get)])
 async def get_one(tag_name: str, db: Session = Depends(get_db)):
     """
     route to get tag object by tag name
@@ -50,7 +50,7 @@ async def get_one(tag_name: str, db: Session = Depends(get_db)):
     return tag
 
 
-@router.put("/{tag_name}", response_model=TagResponse, dependencies=Depends(allowed_operation_put))
+@router.put("/{tag_name}", response_model=TagResponse, dependencies=[Depends(allowed_operation_put)])
 async def update_tag(body: TagModel, db: Session = Depends(get_db)):
     """
     update tag finded by tag name
@@ -69,7 +69,7 @@ async def update_tag(body: TagModel, db: Session = Depends(get_db)):
     return tag
 
 
-@router.delete("/{tag_name}", dependencies=Depends(allowed_operation_delete), status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{tag_name}", dependencies=[Depends(allowed_operation_delete)], status_code=status.HTTP_204_NO_CONTENT)
 async def delete(tag_name: str, db: Session = Depends(get_db)):
     """
     route to delete tag finded by name
