@@ -108,7 +108,7 @@ class CommentModel(CommentBase):
 
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags: List[int]
+    tags: Optional[List[int]]
 
     class Config(BaseConfig):
         arbitrary_types_allowed = True
