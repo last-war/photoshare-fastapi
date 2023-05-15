@@ -22,7 +22,6 @@ router = APIRouter(prefix="/images", tags=['images'])
 
 @router.post("/", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
-                       # TODO tags:
                        image_file: UploadFile = File(),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
@@ -30,8 +29,7 @@ async def create_image(description: str = Form(),
     The create_image function creates a new image in the database.
 
     :param description: str: Get the description of the image from the form
-    :param # TODO tags:
-                           image_file: UploadFile: Upload the image file to the cloud
+    :param image_file: UploadFile: Upload the image file to the cloud
     :param current_user: User: Get the user who is currently logged in
     :param db: Session: Pass the database session to the repository function
     :return: A new image

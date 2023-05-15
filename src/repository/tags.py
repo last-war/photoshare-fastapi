@@ -1,5 +1,5 @@
 from src.schemas import TagModel
-from src.database.models import Tag
+from src.database.models import Tag, tag_to_image
 from sqlalchemy.orm import Session
 
 
@@ -19,7 +19,17 @@ def parse_tags(tags_string: str):
             result.append(cur_tag[1:])
     return result
 
-async def create_tag(tags_string, db: Session):
+
+async def connect_tag(image_id: int, tags_string: str, db: Session):
+    post_tags = create_tags(tags_string, db)
+    if post_tags.count:
+        for tag in post_tags:
+            tag_image_connect = tag_to_image(tag_id=tag.id, image_id=image_id)
+            db.add(tag_image_connect)
+        db.commit()
+
+
+async def create_tags(tags_string, db: Session):
     """
     Create a new tags in database just if not exist
     :param tags_string: string to parse

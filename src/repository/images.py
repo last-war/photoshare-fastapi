@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
 
 from src.database.models import User, Image
+from src.repository.tags import connect_tag
 from src.schemas import ImageModel
 
 
@@ -64,6 +65,8 @@ async def create(body: ImageModel, image_url: str, user: User, db: Session):
     db.add(image)
     db.commit()
     db.refresh(image)
+    if body.tags_string:
+        connect_tag(image.id, body.tags_string, db)
     return image
 
 
