@@ -157,11 +157,3 @@ class TagResponse(TagModel):
 
 class RequestEmail(BaseModel):
     email: EmailStr
-
-
-class QrCodeModel(BaseModel):
-    id: int
-
-
-class QrCodeResponse(QrCodeModel):
-    qr_code: str

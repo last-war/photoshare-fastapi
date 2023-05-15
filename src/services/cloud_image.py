@@ -123,10 +123,17 @@ class CloudImage:
 
     @staticmethod
     async def create_qr_code_image(url: str):
+        """
+        The create_qr_code_image function takes a URL and returns an image of the QR code for that URL.
+
+        :param url: str: Pass the url to be encoded into a qr code
+        :return: A bytesio object
+        :doc-author: Trelent
+        """
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
+            box_size=3,
             border=4,
         )
         qr.add_data(url)
@@ -138,23 +145,6 @@ class CloudImage:
         img.save(output)
         output.seek(0)
         return output
-
-    # @staticmethod
-    # async def create_qr_code_image(url: str):
-    #     qr = qrcode.QRCode(
-    #         version=1,
-    #         error_correction=qrcode.constants.ERROR_CORRECT_L,
-    #         box_size=10,
-    #         border=4,
-    #     )
-    #     qr.add_data(url)
-    #     qr.make(fit=True)
-    #
-    #     img = qr.make_image(fill_color="black", back_color="white")
-    #
-    #     output = base64.b64encode(img.encode("utf-8")).decode("utf-8")
-    #
-    #     return output
 
 
 class Standard:
