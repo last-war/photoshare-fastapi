@@ -7,8 +7,9 @@ Base = declarative_base()
 
 
 tag_to_image = Table('tag_to_image', Base.metadata,
-                     Column('tag_id', Integer, ForeignKey('tags.id'), primary_key=True),
-                     Column('image_id', Integer, ForeignKey('images.id'), primary_key=True)
+                     Column("id", Integer, primary_key=True),
+                     Column('tag_id', Integer, ForeignKey('tags.id', ondelete="CASCADE")),
+                     Column('image_id', Integer, ForeignKey('images.id', ondelete="CASCADE"))
                      )
 
 

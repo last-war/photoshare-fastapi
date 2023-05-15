@@ -22,7 +22,7 @@ router = APIRouter(prefix="/images", tags=['images'])
 
 @router.post("/", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
-                       # TODO tags:
+                       tags_text: str = Form(),
                        image_file: UploadFile = File(),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
@@ -30,17 +30,16 @@ async def create_image(description: str = Form(),
     The create_image function creates a new image in the database.
 
     :param description: str: Get the description of the image from the form
-    :param # TODO tags:
-                           image_file: UploadFile: Upload the image file to the cloud
+    :param tags_text: str: optional string with the tags
+    :param image_file: UploadFile: Upload the image file to the cloud
     :param current_user: User: Get the user who is currently logged in
     :param db: Session: Pass the database session to the repository function
     :return: A new image
-    :doc-author: Trelent
     """
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
     image_url = CloudImage.get_url_for_image(file_name)
-    body = ImageModel(description=description)
+    body = ImageModel(description=description, tags=tags_text)
     image = await repository_images.create(body, image_url, current_user, db)
     return image
 
@@ -61,13 +60,12 @@ async def create_transformation_image(body: ImageTransformationModel,
     :param current_user: User: Get the current user from the database
     :param db: Session: Access the database
     :return: The image that was created
-    :doc-author: Trelent
     """
     image = await repository_images.get_image_from_id(body.id, current_user, db)
     if not image:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     transformation_image_url = CloudImage.get_transformation_image(image.image_url, body.transformation)
-    body = ImageModel(description=image.description)  # TODO tags
+    body = ImageModel(description=image.description)
     image_in_db = await repository_images.get_image_from_url(transformation_image_url, current_user, db)
     if image_in_db:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Resource already exists")
@@ -88,7 +86,6 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
     :param current_user: User: Get the current user from the database
     :param db: Session: Get a database session
     :return: A list of images
-    :doc-author: Trelent
     """
     images = await repository_images.get_images(limit, offset, current_user, db)
     if images is None:
@@ -97,7 +94,7 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
 
 
 @router.get("/{image_id}", response_model=ImageResponse)
-async def get_images(image_id: int = Path(ge=1),
+async def get_image(image_id: int = Path(ge=1),
                      current_user: User = Depends(auth_service.get_current_user),
                      db: Session = Depends(get_db)):
     """

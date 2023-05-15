@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field, EmailStr, BaseConfig
 
@@ -104,11 +104,22 @@ class CommentModel(CommentBase):
 
     class Config:
         orm_mode = True
-     
 
+        
+class TagModel(BaseModel):
+    tag_name: str = Field(max_length=30)
+
+
+class TagResponse(TagModel):
+    id: int
+    
+    class Config:
+        orm_mode = True
+
+        
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    # TODO tags:
+    tags: Optional[str]
 
     class Config(BaseConfig):
         arbitrary_types_allowed = True
@@ -120,6 +131,7 @@ class ImageResponse(ImageModel):
     user_id: int
     created_at: datetime
     updated_at: Optional[datetime]
+    tags: List[TagResponse]
 
     class Config:
         orm_mode = True
@@ -138,18 +150,6 @@ class RatingResponse(RatingModel):
     id: int
     user_id: int
     image_id: int
-
-    class Config:
-        orm_mode = True
-
-
-class TagModel(BaseModel):
-    tag_name: str = Field(max_length=30)
-
-
-class TagResponse(TagModel):
-    id: int
-    tag_name: str
 
     class Config:
         orm_mode = True

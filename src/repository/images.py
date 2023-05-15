@@ -21,7 +21,6 @@ async def get_images(limit: int, offset: int, user: User, db: Session):
     :param user: User: Get the images of a specific user
     :param db: Session: Pass the database session to the function
     :return: A list of image objects
-    :doc-author: Trelent
     """
     images = db.query(Image).filter(and_(Image.user_id == user.id, Image.is_deleted == False)).\
         order_by(desc(Image.created_at)).limit(limit).offset(offset).all()
@@ -38,7 +37,6 @@ async def get_image(image_id: int, user: User, db: Session):
     :param user: User: Get the user object from the database
     :param db: Session: Access the database
     :return: The image with the id and user_id that is given in the arguments
-    :doc-author: Trelent
     """
     image = db.query(Image).filter(and_(Image.user_id == user.id, Image.id == image_id, Image.is_deleted == False)).\
         order_by(desc(Image.created_at)).first()
@@ -58,9 +56,8 @@ async def create(body: ImageModel, image_url: str, user: User, db: Session):
     :param user: User: Get the user who is logged in
     :param db: Session: Access the database
     :return: The image object
-    :doc-author: Trelent
     """
-    image = Image(**body.dict(), user=user, image_url=image_url)
+    image = Image(**body.dict(), user=user, image_url=image_url, tags=create_tags(body.tags, db))
     db.add(image)
     db.commit()
     db.refresh(image)
@@ -78,7 +75,6 @@ async def get_image_from_id(image_id: int, user: User, db: Session):
     :param user: User: Get the user's id and check if they are the owner of the image
     :param db: Session: Communicate with the database
     :return: An image from the database based on an id and a user
-    :doc-author: Trelent
     """
     image = db.query(Image).filter(and_(Image.id == image_id, Image.user_id == user.id, Image.is_deleted == False)).first()
     return image
@@ -93,7 +89,6 @@ async def get_image_from_url(image_url: str, user: User, db: Session):
     :param user: User: Get the user from the database
     :param db: Session: Access the database
     :return: The image with the given url and user
-    :doc-author: Trelent
     """
     image = db.query(Image).filter(and_(Image.image_url == image_url, Image.user_id == user.id)).first()
     return image
@@ -108,7 +103,6 @@ async def remove(image_id: int, user: User, db: Session):
     :param user: User: Get the user_id from the user object
     :param db: Session: Pass the database session to the function
     :return: The image that was removed
-    :doc-author: Trelent
     """
     image = await get_image_from_id(image_id, user, db)
     if image:
@@ -128,7 +122,6 @@ async def change_description(body: ImageModel, image_id: int, user: User, db: Se
     :param user: User: Check if the user is authorized to change the description
     :param db: Session: Pass the database session to the function
     :return: The image with the updated description
-    :doc-author: Trelent
     """
     image = await get_image_from_id(image_id, user, db)
     if image:
