@@ -39,5 +39,5 @@ class RoleAccess:
         :return: The decorated function
         :doc-author: Trelent
         """
-        if current_user.roles not in self.allowed_roles:
+        if current_user.role not in self.allowed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Operation forbidden')
