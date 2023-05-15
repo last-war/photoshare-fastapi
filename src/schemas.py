@@ -108,7 +108,7 @@ class CommentModel(CommentBase):
 
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags_string: Optional[str]
+    tags: List[int]
 
     class Config(BaseConfig):
         arbitrary_types_allowed = True
@@ -120,6 +120,7 @@ class ImageResponse(ImageModel):
     user_id: int
     created_at: datetime
     updated_at: Optional[datetime]
+    tags: List[TagResponse]
 
     class Config:
         orm_mode = True
@@ -149,8 +150,7 @@ class TagModel(BaseModel):
 
 class TagResponse(TagModel):
     id: int
-    tag_name: str
-
+    
     class Config:
         orm_mode = True
 
