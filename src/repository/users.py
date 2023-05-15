@@ -4,7 +4,7 @@ from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
 from src.database.models import User, UserRole
-from src.schemas import UserModel, UserResponse, UserChangeRole
+from src.schemas import UserModel, UserResponse, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
@@ -70,13 +70,13 @@ async def update_avatar(email, url: str, db: Session) -> User:
     return user
 
 
-async def update_user(body: UserResponse, user: User, db: Session) -> User | None:
+async def update_user(body: UserUpdate, user: User, db: Session) -> User | None:
     """
     Updates user profile.
     Logged-in user can update his information.
 
     :param body: A set of user attributes to update.
-    :type body: UserResponse
+    :type body: UserUpdate
     :param user: Logged-in user.
     :type user: User.
     :param db: Database session.
@@ -95,13 +95,13 @@ async def update_user(body: UserResponse, user: User, db: Session) -> User | Non
     return user
 
 
-async def update_user_by_admin(body: UserResponse, user: User, db: Session) -> User | None:
+async def update_user_by_admin(body: UserUpdateAdmin, user: User, db: Session) -> User | None:
     """
     Updates user profile.
     Logged-in admin can update any profile.
 
     :param body: A set of user attributes to update.
-    :type body: UserResponse
+    :type body: UserUpdateAdmin
     :param user: User.
     :type user: User.
     :param db: Database session.
@@ -111,16 +111,16 @@ async def update_user_by_admin(body: UserResponse, user: User, db: Session) -> U
     """
     user_to_update = db.query(User).filter(User.id == body.id).first()
     if user_to_update:
-        if user.role == RoleAccess([UserRole.Admin]):
-            user_to_update.login = body.login
-            user_to_update.name = body.name
-            user_to_update.email = body.email
-            user_to_update.is_active = body.is_active
-            user_to_update.role = body.role
-            user_to_update.user_pic_url = body.user_pic_url
-            user_to_update.password_checksum = auth_service.get_password_hash(body.password_checksum)
-            user_to_update.updated_at = datetime.now()
-            db.commit()
+
+        user_to_update.login = body.login
+        user_to_update.name = body.name
+        user_to_update.email = body.email
+        user_to_update.is_active = body.is_active
+        user_to_update.role = body.role
+        user_to_update.user_pic_url = body.user_pic_url
+        user_to_update.password_checksum = auth_service.get_password_hash(body.password_checksum)
+        user_to_update.updated_at = datetime.now()
+        db.commit()
         return user_to_update
     return None
 
@@ -140,10 +140,9 @@ async def change_role(body: UserChangeRole, user: User, db: Session) -> User | N
     """
     user_to_update = db.query(User).filter(User.id == body.id).first()
     if user_to_update:
-        if user.role == RoleAccess([UserRole.Admin]):
-            user_to_update.role = body.role
-            user_to_update.updated_at = datetime.now()
-            db.commit()
+        user_to_update.role = body.role
+        user_to_update.updated_at = datetime.now()
+        db.commit()
         return user_to_update
     return None
 
@@ -164,4 +163,27 @@ async def ban_user(user_id: int, db: Session) -> User | None:
         user_to_ban.is_active = False
         db.commit()
         return user_to_ban
+    return None
+
+
+async def get_user_profile(login: str, db: Session) -> UserShow | None:
+    """
+    function returns a UserShow object containing the user's information.
+
+    :param login: str: Get the user profile of a specific user
+    :param db: Session: Access the database
+    :return: A UserShow object
+    """
+    user = db.query(User).filter(User.login == login).first()
+    if user:
+        user_profile = UserShow(
+            id=user.id,
+            login=user.login,
+            email=user.email,
+            role=user.role,
+            user_pic_url=user.user_pic_url,
+            name=user.name,
+            is_active=user.is_active,
+        )
+        return user_profile
     return None
