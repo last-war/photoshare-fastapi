@@ -17,7 +17,7 @@ allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 @router.post("/{tags_string}", response_model=TagResponse, dependencies=[Depends(allowed_operation_post)],
              status_code=status.HTTP_201_CREATED)
-async def create_tag(tags_string: str, db: Session = Depends(get_db)):
+async def create_tags(tags_string: str, db: Session = Depends(get_db)):
     """
     create new tag from tag_name
 
@@ -28,7 +28,7 @@ async def create_tag(tags_string: str, db: Session = Depends(get_db)):
     :return: tag object
     :rtype: Tag | None
     """
-    tag = await repository_tag.create_tag(tags_string, db)
+    tag = await repository_tag.create_tags(tags_string, db)
     return tag
 
 

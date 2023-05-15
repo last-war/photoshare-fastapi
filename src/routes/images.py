@@ -22,7 +22,7 @@ router = APIRouter(prefix="/images", tags=['images'])
 
 @router.post("/", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
-                       # TODO tags:
+                       tags_text: str = Form(),
                        image_file: UploadFile = File(),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
@@ -30,8 +30,7 @@ async def create_image(description: str = Form(),
     The create_image function creates a new image in the database.
 
     :param description: str: Get the description of the image from the form
-    :param # TODO tags:
-                           image_file: UploadFile: Upload the image file to the cloud
+    :param image_file: UploadFile: Upload the image file to the cloud
     :param current_user: User: Get the user who is currently logged in
     :param db: Session: Pass the database session to the repository function
     :return: A new image
@@ -40,7 +39,7 @@ async def create_image(description: str = Form(),
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
     image_url = CloudImage.get_url_for_image(file_name)
-    body = ImageModel(description=description)
+    body = ImageModel(description=description, tags=tags_text)
     image = await repository_images.create(body, image_url, current_user, db)
     return image
 
@@ -67,7 +66,7 @@ async def create_transformation_image(body: ImageTransformationModel,
     if not image:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     transformation_image_url = CloudImage.get_transformation_image(image.image_url, body.transformation)
-    body = ImageModel(description=image.description)  # TODO tags
+    body = ImageModel(description=image.description)
     image_in_db = await repository_images.get_image_from_url(transformation_image_url, current_user, db)
     if image_in_db:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Resource already exists")

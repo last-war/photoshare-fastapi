@@ -1,5 +1,5 @@
 from src.schemas import TagModel
-from src.database.models import Tag
+from src.database.models import Tag, tag_to_image
 from sqlalchemy.orm import Session
 
 
@@ -10,7 +10,7 @@ def parse_tags(tags_string: str):
     :param tags_string: string to parse
     :type tags_string: str
     :return: list of tags
-    :rtype: List
+    :rtype: List[str]
     """
     result = []
     raw_tag = tags_string.split(' ')
@@ -19,7 +19,8 @@ def parse_tags(tags_string: str):
             result.append(cur_tag[1:])
     return result
 
-async def create_tag(tags_string, db: Session):
+
+async def create_tags(tags_string, db: Session):
     """
     Create a new tags in database just if not exist
     :param tags_string: string to parse
@@ -31,7 +32,7 @@ async def create_tag(tags_string, db: Session):
 
     """
     result = []
-    rw_tags = parse_tags(tags_string=tags_string)
+    rw_tags = parse_tags(tags_string)
     for tag_name in rw_tags:
         tag = find_tag(tag_name, db)
         if tag:
@@ -39,9 +40,9 @@ async def create_tag(tags_string, db: Session):
         else:
             tag = Tag(tag_name=tag_name)
             db.add(tag)
-            result.append(tag)
             db.commit()
             db.refresh(tag)
+            result.append(tag)
     return result
 
 
