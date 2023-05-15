@@ -1,6 +1,5 @@
 from typing import List
 
-import cloudinary
 from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Body, Form
 from sqlalchemy.orm import Session
 
@@ -30,11 +29,11 @@ async def create_image(description: str = Form(),
     The create_image function creates a new image in the database.
 
     :param description: str: Get the description of the image from the form
+    :param tags_text: str: optional string with the tags
     :param image_file: UploadFile: Upload the image file to the cloud
     :param current_user: User: Get the user who is currently logged in
     :param db: Session: Pass the database session to the repository function
     :return: A new image
-    :doc-author: Trelent
     """
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
@@ -60,7 +59,6 @@ async def create_transformation_image(body: ImageTransformationModel,
     :param current_user: User: Get the current user from the database
     :param db: Session: Access the database
     :return: The image that was created
-    :doc-author: Trelent
     """
     image = await repository_images.get_image_from_id(body.id, current_user, db)
     if not image:
@@ -87,7 +85,6 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
     :param current_user: User: Get the current user from the database
     :param db: Session: Get a database session
     :return: A list of images
-    :doc-author: Trelent
     """
     images = await repository_images.get_images(limit, offset, current_user, db)
     if images is None:
