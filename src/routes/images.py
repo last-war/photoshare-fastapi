@@ -22,6 +22,7 @@ router = APIRouter(prefix="/images", tags=['images'])
 
 @router.post("/", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
+                       tags_text: str = Form(),
                        image_file: UploadFile = File(),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
@@ -38,7 +39,7 @@ async def create_image(description: str = Form(),
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
     image_url = CloudImage.get_url_for_image(file_name)
-    body = ImageModel(description=description)
+    body = ImageModel(description=description, tags=tags_text)
     image = await repository_images.create(body, image_url, current_user, db)
     return image
 
