@@ -96,7 +96,7 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
 
 
 @router.get("/{image_id}", response_model=ImageResponse)
-async def get_images(image_id: int = Path(ge=1),
+async def get_image(image_id: int = Path(ge=1),
                      current_user: User = Depends(auth_service.get_current_user),
                      db: Session = Depends(get_db)):
     """
