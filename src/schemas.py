@@ -36,6 +36,46 @@ class UserChangeRole(BaseModel):
         orm_mode = True
 
 
+class UserUpdate(BaseModel):
+    id: int
+    email: str
+    updated_at: Optional[datetime]
+    user_pic_url: Optional[str]
+    name: Optional[str]
+    password_checksum: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserUpdateAdmin(BaseModel):
+    id: int
+    login: str
+    email: str
+    role: int
+    updated_at: Optional[datetime]
+    user_pic_url: Optional[str]
+    name: Optional[str]
+    is_active: bool
+    password_checksum: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserShow(BaseModel):
+    id: int
+    login: str
+    email: str
+    role: int
+    user_pic_url: Optional[str]
+    name: Optional[str]
+    is_active: bool
+
+    class Config:
+        orm_mode = True
+
+
 class UserDb(BaseModel):
     id: int
     email: str
