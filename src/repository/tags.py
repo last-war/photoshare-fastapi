@@ -10,7 +10,7 @@ def parse_tags(tags_string: str):
     :param tags_string: string to parse
     :type tags_string: str
     :return: list of tags
-    :rtype: List
+    :rtype: List[str]
     """
     result = []
     raw_tag = tags_string.split(' ')
@@ -18,15 +18,6 @@ def parse_tags(tags_string: str):
         if cur_tag[:1] == '#':
             result.append(cur_tag[1:])
     return result
-
-
-async def connect_tag(image_id: int, tags_string: str, db: Session):
-    post_tags = create_tags(tags_string, db)
-    if post_tags.count:
-        for tag in post_tags:
-            tag_image_connect = tag_to_image(tag_id=tag.id, image_id=image_id)
-            db.add(tag_image_connect)
-        db.commit()
 
 
 async def create_tags(tags_string, db: Session):
@@ -41,7 +32,7 @@ async def create_tags(tags_string, db: Session):
 
     """
     result = []
-    rw_tags = parse_tags(tags_string=tags_string)
+    rw_tags = parse_tags(tags_string)
     for tag_name in rw_tags:
         tag = find_tag(tag_name, db)
         if tag:
@@ -49,9 +40,9 @@ async def create_tags(tags_string, db: Session):
         else:
             tag = Tag(tag_name=tag_name)
             db.add(tag)
-            result.append(tag)
             db.commit()
             db.refresh(tag)
+            result.append(tag)
     return result
 
 
