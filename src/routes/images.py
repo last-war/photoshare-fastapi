@@ -1,12 +1,12 @@
 from typing import List
 
-import cloudinary
 from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Body, Form
 from sqlalchemy.orm import Session
+from starlette.responses import StreamingResponse
 
 from src.database.db import get_db
 from src.database.models import User
-from src.schemas import ImageModel, ImageResponse, ImageTransformationModel
+from src.schemas import ImageModel, ImageResponse, ImageTransformationModel, QrCodeModel, QrCodeResponse
 from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
@@ -158,3 +158,16 @@ async def update_description_image(body: ImageModel,
     if image is None or image.is_deleted is True:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return image
+
+
+@router.get("/generate_qrcode/{image_id}")
+async def generate_qrcode(image_id: int = Path(ge=1),
+                          current_user: User = Depends(auth_service.get_current_user),
+                          db: Session = Depends(get_db)):
+    image = await repository_images.get_image(image_id, current_user, db)
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    qr_code = await CloudImage.create_qr_code_image(image.image_url)
+    if qr_code is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    return StreamingResponse(qr_code, media_type="image/png", status_code=status.HTTP_201_CREATED)

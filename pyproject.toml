@@ -20,6 +20,7 @@ libgravatar = "^1.0.4"
 cloudinary = "^1.32.0"
 python-jose = "^3.3.0"
 python-multipart = "^0.0.6"
+qrcode = "^7.4.2"
 
 
 [build-system]
