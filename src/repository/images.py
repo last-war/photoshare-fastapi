@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
 
 from src.database.models import User, Image
+from src.repository.tags import create_tags
 from src.schemas import ImageModel
 
 
@@ -10,37 +11,35 @@ Asynchronous functions for interaction with the database with the images table.
 """
 
 
-async def get_images(limit: int, offset: int, db: Session):
+async def get_images(limit: int, offset: int, user: User, db: Session):
     """
-    The get_images function returns a list of images from the database.
-        The function takes in three parameters: limit, offset, and db.
-        Limit is an integer that specifies how many images to return at once.
-        Offset is an integer that specifies where to start returning images from (i.e., if you want to get the next 10 results after your first query).
-            This allows for pagination of results so we don't have to return all results at once and overload our server with requests.
+    The get_images function returns a list of images for the specified user.
+        The limit and offset parameters are used to paginate the results.
+
 
     :param limit: int: Limit the number of images returned
-    :param offset: int: Specify the offset from which to start
+    :param offset: int: Specify the offset of the images to be retrieved
+    :param user: User: Get the images of a specific user
     :param db: Session: Pass the database session to the function
-    :return: A list of images
-    :doc-author: Trelent
+    :return: A list of image objects
     """
-    images = db.query(Image).filter(Image.is_deleted == False).\
+    images = db.query(Image).filter(and_(Image.user_id == user.id, Image.is_deleted == False)).\
         order_by(desc(Image.created_at)).limit(limit).offset(offset).all()
     return images
 
 
-async def get_image(image_id: int, db: Session):
+async def get_image(image_id: int, user: User, db: Session):
     """
-    The get_image function takes in an image_id and a database session.
-    It then queries the Image table for the image with that id, as long as it is not deleted.
-    The function returns the first result of this query.
+    The get_image function takes in an image_id, a user object and a database session.
+    It then queries the database for an image with the given id that belongs to the given user.
+    If such an image exists, it is returned.
 
-    :param image_id: int: Specify the image id of the image that is being requested
-    :param db: Session: Pass the database session to the function
-    :return: The first image with the specified id that is not deleted
-    :doc-author: Trelent
+    :param image_id: int: Specify the image id of the image that we want to get
+    :param user: User: Get the user object from the database
+    :param db: Session: Access the database
+    :return: The image with the id and user_id that is given in the arguments
     """
-    image = db.query(Image).filter(and_(Image.id == image_id, Image.is_deleted == False)).\
+    image = db.query(Image).filter(and_(Image.user_id == user.id, Image.id == image_id, Image.is_deleted == False)).\
         order_by(desc(Image.created_at)).first()
     return image
 
@@ -58,9 +57,8 @@ async def create(body: ImageModel, image_url: str, user: User, db: Session):
     :param user: User: Get the user who is logged in
     :param db: Session: Access the database
     :return: The image object
-    :doc-author: Trelent
     """
-    image = Image(**body.dict(), user=user, image_url=image_url)
+    image = Image(**body.dict(), user=user, image_url=image_url, tags=create_tags(body.tags, db))
     db.add(image)
     db.commit()
     db.refresh(image)
@@ -78,9 +76,24 @@ async def get_image_from_id(image_id: int, user: User, db: Session):
     :param user: User: Get the user's id and check if they are the owner of the image
     :param db: Session: Communicate with the database
     :return: An image from the database based on an id and a user
-    :doc-author: Trelent
     """
-    image = db.query(Image).filter(and_(Image.id == image_id, Image.user_id == user.id)).first()
+    image = db.query(Image).filter(and_(Image.id == image_id, Image.user_id == user.id, Image.is_deleted == False)).first()
+    return image
+
+
+async def get_image_from_url(image_url: str, user: User, db: Session):
+    """
+    The get_image_from_url function takes in an image_url and a user object, and returns the Image object
+        associated with that url. If no such image exists, it returns None.
+
+    :param image_url: str: Specify the image url
+    :param user: User: Get the user from the database
+    :param db: Session: Access the database
+    :return: The image with the given url and user
+    """
+    image = db.query(Image).filter(and_(Image.image_url == image_url,
+                                        Image.user_id == user.id,
+                                        Image.is_deleted == False)).first()
     return image
 
 
@@ -93,7 +106,6 @@ async def remove(image_id: int, user: User, db: Session):
     :param user: User: Get the user_id from the user object
     :param db: Session: Pass the database session to the function
     :return: The image that was removed
-    :doc-author: Trelent
     """
     image = await get_image_from_id(image_id, user, db)
     if image:
@@ -113,7 +125,6 @@ async def change_description(body: ImageModel, image_id: int, user: User, db: Se
     :param user: User: Check if the user is authorized to change the description
     :param db: Session: Pass the database session to the function
     :return: The image with the updated description
-    :doc-author: Trelent
     """
     image = await get_image_from_id(image_id, user, db)
     if image:
