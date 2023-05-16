@@ -155,5 +155,21 @@ class RatingResponse(RatingModel):
         orm_mode = True
 
 
+class AverageRatingResponse(BaseModel):
+    average_rating: float
+
+
+class TagModel(BaseModel):
+    tag_name: str = Field(max_length=30)
+
+
+class TagResponse(TagModel):
+    id: int
+    tag_name: str
+
+    class Config:
+        orm_mode = True
+
+
 class RequestEmail(BaseModel):
     email: EmailStr
