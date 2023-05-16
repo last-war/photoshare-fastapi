@@ -91,7 +91,9 @@ async def get_image_from_url(image_url: str, user: User, db: Session):
     :param db: Session: Access the database
     :return: The image with the given url and user
     """
-    image = db.query(Image).filter(and_(Image.image_url == image_url, Image.user_id == user.id)).first()
+    image = db.query(Image).filter(and_(Image.image_url == image_url,
+                                        Image.user_id == user.id,
+                                        Image.is_deleted == False)).first()
     return image
 
 
