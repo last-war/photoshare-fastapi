@@ -1,15 +1,16 @@
 from typing import List
 
-from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Body, Form
+from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from starlette.responses import StreamingResponse
 
 from src.database.db import get_db
-from src.database.models import User
+from src.database.models import User, UserRole
 from src.schemas import ImageModel, ImageResponse, ImageTransformationModel
 from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
+from src.services.roles import RoleAccess
 
 
 """
@@ -19,8 +20,15 @@ Routes image.
 
 router = APIRouter(prefix="/images", tags=['images'])
 
+allowed_operation_get = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole.User])
+allowed_operation_post = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole.User])
+allowed_operation_patch = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole.User])
+allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator])
+allowed_operation_delete = RoleAccess([UserRole.Admin])
 
-@router.post("/", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
+
+@router.post("/", response_model=ImageResponse, dependencies=[Depends(allowed_operation_post)],
+             status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
                        tags_text: str = Form(),
                        image_file: UploadFile = File(),
@@ -44,7 +52,8 @@ async def create_image(description: str = Form(),
     return image
 
 
-@router.post("/transformation", response_model=ImageResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/transformation", response_model=ImageResponse, dependencies=[Depends(allowed_operation_post)],
+             status_code=status.HTTP_201_CREATED)
 async def create_transformation_image(body: ImageTransformationModel,
                                       current_user: User = Depends(auth_service.get_current_user),
                                       db: Session = Depends(get_db)):
@@ -73,7 +82,7 @@ async def create_transformation_image(body: ImageTransformationModel,
     return new_image
 
 
-@router.get("/", response_model=List[ImageResponse])
+@router.get("/", response_model=List[ImageResponse], dependencies=[Depends(allowed_operation_get)])
 async def get_images(limit: int = Query(10, le=50), offset: int = 0,
                      current_user: User = Depends(auth_service.get_current_user),
                      db: Session = Depends(get_db)):
@@ -93,10 +102,10 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
     return images
 
 
-@router.get("/{image_id}", response_model=ImageResponse)
+@router.get("/{image_id}", response_model=ImageResponse, dependencies=[Depends(allowed_operation_get)])
 async def get_image(image_id: int = Path(ge=1),
-                     current_user: User = Depends(auth_service.get_current_user),
-                     db: Session = Depends(get_db)):
+                    current_user: User = Depends(auth_service.get_current_user),
+                    db: Session = Depends(get_db)):
     """
     The get_images function is a GET request that returns the image with the given ID.
     The function takes an optional image_id parameter, which defaults to 1 if not provided.
@@ -115,7 +124,7 @@ async def get_image(image_id: int = Path(ge=1),
     return image
 
 
-@router.delete("/{image_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{image_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(allowed_operation_delete)])
 async def remove_image(image_id: int = Path(ge=1),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
@@ -134,7 +143,7 @@ async def remove_image(image_id: int = Path(ge=1),
     return image
 
 
-@router.patch("/description/{image_id}", response_model=ImageResponse)
+@router.patch("/description/{image_id}", response_model=ImageResponse, dependencies=[Depends(allowed_operation_patch)])
 async def update_description_image(body: ImageModel,
                                    image_id: int = Path(ge=1),
                                    current_user: User = Depends(auth_service.get_current_user),
@@ -157,7 +166,7 @@ async def update_description_image(body: ImageModel,
     return image
 
 
-@router.post("/generate_qrcode/{image_id}")
+@router.post("/generate_qrcode/{image_id}", dependencies=[Depends(allowed_operation_post)])
 async def generate_qrcode(image_id: int = Path(ge=1),
                           current_user: User = Depends(auth_service.get_current_user),
                           db: Session = Depends(get_db)):
