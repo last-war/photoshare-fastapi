@@ -28,7 +28,7 @@ async def signup(body: UserModel, request: Request, db: Session = Depends(get_db
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
-    body.password_checksum = auth_service.get_password_hash(body.password_checksum)
+    body.password_checksum = auth_service.pwd_context.hash(body.password_checksum)
     new_user = await repository_users.create_user(body, db)
     return new_user
 
@@ -50,7 +50,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User is inactive")
-    if not auth_service.verify_password(body.password, user.password_checksum):
+    if not auth_service.pwd_context.verify(body.password, user.password_checksum):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
     # Generate JWT
     access_token = await auth_service.create_access_token(data={"sub": user.email})

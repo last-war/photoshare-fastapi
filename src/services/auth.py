@@ -17,32 +17,17 @@ class Auth:
     SECRET_KEY = settings.secret_key
     ALGORITHM = settings.algorithm
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
-    def verify_password(self, plain_password, hashed_password):
-        """
-        The verify_password function takes a plain-text password and hashed
-        password as arguments. It then uses the pwd_context object to verify that the
-        plain-text password matches the hashed one.
-
-        :param self: Represent the instance of the class
-        :param plain_password: Check if the password is correct
-        :param hashed_password: Compare the password that is being entered to the hashed password in the database
-        :return: A boolean value, true or false
-        :doc-author: Trelent
-        """
-        return self.pwd_context.verify(plain_password, hashed_password)
-
-    def get_password_hash(self, password: str):
-        """
-        The get_password_hash function takes a password as input and returns the hash of that password.
-        The hash is generated using the pwd_context object, which is an instance of Flask-Bcrypt's Bcrypt class.
-
-        :param self: Represent the instance of the class
-        :param password: str: Specify the password that will be hashed
-        :return: A hash of the password
-        :doc-author: Trelent
-        """
-        return self.pwd_context.hash(password)
+    def token_decode(self, token):
+        try:
+            return jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
+        except JWTError:
+            raise self.credentials_exception
 
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None):
         """
@@ -102,27 +87,18 @@ class Auth:
         :return: A user object if the token is valid
         :doc-author: Trelent
         """
-        credentials_exception = HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
 
-        try:
-            # Decode JWT
-            payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
-            if payload.get("scope") == "access_token":
-                email = payload.get("sub")
-                if email is None:
-                    raise credentials_exception
-            else:
-                raise credentials_exception
-        except JWTError:
-            raise credentials_exception
+        payload = self.token_decode(token)
+        if payload.get("scope") == "access_token":
+            email = payload.get("sub")
+            if email is None:
+                raise self.credentials_exception
+        else:
+            raise self.credentials_exception
 
         user = await repository_users.get_user_by_email(email, db)
         if user is None:
-            raise credentials_exception
+            raise self.credentials_exception
         return user
 
     async def decode_refresh_token(self, refresh_token: str):
@@ -138,14 +114,11 @@ class Auth:
         :return: The email of the user that is associated with the refresh token
         :doc-author: Trelent
         """
-        try:
-            payload = jwt.decode(refresh_token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
-            if payload['scope'] == 'refresh_token':
-                email = payload['sub']
-                return email
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token')
-        except JWTError:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials')
+        payload = self.token_decode(refresh_token)
+        if payload['scope'] == 'refresh_token':
+            email = payload['sub']
+            return email
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token')
 
     def create_email_token(self, data: dict):
         """
@@ -180,16 +153,11 @@ class Auth:
         :return: The email address associated with the token
         :doc-author: Trelent
         """
-        try:
-            payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
-            if payload['scope'] == 'email_token':
-                email = payload['sub']
-                return email
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token')
-        except JWTError as e:
-            print(e)
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="Invalid token for email verification")
+        payload = self.token_decode(token)
+        if payload['scope'] == 'email_token':
+            email = payload['sub']
+            return email
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid scope for token')
 
 
 auth_service = Auth()

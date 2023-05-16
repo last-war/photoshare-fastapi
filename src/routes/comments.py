@@ -78,7 +78,7 @@ async def remove_comment(comment_id: int,
     if not deleted_comment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    return deleted_comment
+    return None
 
 
 @router.get('/user/{user_id}', response_model=CommentModel, dependencies=[Depends(allowed_operation_get)])

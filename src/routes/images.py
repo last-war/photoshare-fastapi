@@ -140,7 +140,7 @@ async def remove_image(image_id: int = Path(ge=1),
     image = await repository_images.remove(image_id, current_user, db)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
-    return image
+    return None
 
 
 @router.patch("/description/{image_id}", response_model=ImageResponse, dependencies=[Depends(allowed_operation_patch)])

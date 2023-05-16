@@ -89,5 +89,5 @@ async def delete(tag_name: str, db: Session = Depends(get_db)):
     tag = await repository_tag.delete_tag(tag_name, db)
     if tag is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
-    return tag
+    return None
 

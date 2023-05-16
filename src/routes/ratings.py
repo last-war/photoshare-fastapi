@@ -54,4 +54,4 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     deleted_rate = await repository_ratings.delete_rate(rate_id, db, current_user)
     if deleted_rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rate not found or not available.")
-    return deleted_rate
+    return None

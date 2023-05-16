@@ -14,15 +14,7 @@ from starlette.responses import StreamingResponse
 from src.conf.config import settings
 
 
-"""
-Photo storage service.
-"""
-
-
 class CloudImage:
-    """
-    Class Photo storage.
-    """
     cloudinary.config(
         cloud_name=settings.cloudinary_name,
         api_key=settings.cloudinary_api_key,
