@@ -89,6 +89,10 @@ class RatingResponse(RatingModel):
         orm_mode = True
 
 
+class AverageRatingResponse(BaseModel):
+    average_rating: float
+
+
 class TagModel(BaseModel):
     tag_name: str = Field(max_length=30)
 
