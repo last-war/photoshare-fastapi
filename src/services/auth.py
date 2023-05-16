@@ -117,6 +117,9 @@ class Auth:
                     raise credentials_exception
             else:
                 raise credentials_exception
+            token_blacklisted = await repository_users.is_blacklisted_token(token, db)
+            if token_blacklisted:
+                raise credentials_exception
         except JWTError:
             raise credentials_exception
 

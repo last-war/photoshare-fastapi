@@ -73,3 +73,10 @@ class Rating(Base):
     image_id = Column(Integer, ForeignKey(Image.id, ondelete="CASCADE"))
     user = relationship('User', backref="ratings")
     image = relationship('Image', backref="ratings")
+
+
+class BlacklistToken(Base):
+    __tablename__ = 'blacklisted_tokens'
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), unique=True, nullable=False)
+    added_on = Column(DateTime, default=func.now())
