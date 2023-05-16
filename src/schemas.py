@@ -119,18 +119,16 @@ class TagResponse(TagModel):
         
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags: Optional[str]
-
-    class Config(BaseConfig):
-        arbitrary_types_allowed = True
+    tags_text: Optional[str]
 
 
-class ImageResponse(ImageModel):
+class ImageResponse(BaseModel):
     id: int
     image_url: str
     user_id: int
     created_at: datetime
     updated_at: Optional[datetime]
+    description: str
     tags: List[TagResponse]
 
     class Config:
