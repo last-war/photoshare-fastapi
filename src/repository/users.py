@@ -3,10 +3,9 @@ from datetime import datetime
 from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
-from src.database.models import User, UserRole
-from src.schemas import UserModel, UserResponse, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
+from src.database.models import User
+from src.schemas.schemas import UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.auth import auth_service
-from src.services.roles import RoleAccess
 
 
 async def get_user_by_email(email: str, db: Session) -> User | None:

@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from starlette import status
 
-from src.schemas import RatingModel
 from src.database.models import Rating, User, Image
 
 

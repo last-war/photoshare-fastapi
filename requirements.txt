@@ -1,0 +1,11 @@
+pydantic~=1.10.7
+fastapi~=0.95.1
+sqlalchemy~=2.0.12
+starlette~=0.26.1
+passlib~=1.7.4
+qrcode~=7.4.2
+cloudinary~=1.32.0
+libgravatar~=1.0.4
+uvicorn~=0.22.0
+alembic~=1.10.4
+jose~=1.0.0

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 
 from src.database.models import UserRole
 from src.repository import tags as repository_tag
-from src.schemas import TagResponse, TagModel
+from src.schemas.schemas import TagResponse, TagModel
 from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.services.roles import RoleAccess
