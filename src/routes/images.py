@@ -6,16 +6,11 @@ from starlette.responses import StreamingResponse
 
 from src.database.db import get_db
 from src.database.models import User, UserRole
-from src.schemas import ImageModel, ImageResponse, ImageTransformationModel
+from src.schemas.schemas import ImageModel, ImageResponse, ImageTransformationModel
 from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
-
-
-"""
-Routes image.
-"""
 
 
 router = APIRouter(prefix="/images", tags=['images'])
@@ -140,7 +135,7 @@ async def remove_image(image_id: int = Path(ge=1),
     image = await repository_images.remove(image_id, current_user, db)
     if image is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
-    return image
+    return None
 
 
 @router.patch("/description/{image_id}", response_model=ImageResponse, dependencies=[Depends(allowed_operation_patch)])

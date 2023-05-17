@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 
 from src.database.models import UserRole
 from src.repository import tags as repository_tag
-from src.schemas import TagResponse, TagModel
+from src.schemas.schemas import TagResponse, TagModel
 from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.services.roles import RoleAccess
@@ -89,5 +89,5 @@ async def delete(tag_name: str, db: Session = Depends(get_db)):
     tag = await repository_tag.delete_tag(tag_name, db)
     if tag is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
-    return tag
+    return None
 
