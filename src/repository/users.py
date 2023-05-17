@@ -3,8 +3,8 @@ from datetime import datetime
 from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
-from src.database.models import User, UserRole
-from src.schemas import UserModel, UserResponse, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
+from src.database.models import User, UserRole, BlacklistToken
+from src.schemas.schemas import UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
@@ -187,3 +187,33 @@ async def get_user_profile(login: str, db: Session) -> UserShow | None:
         )
         return user_profile
     return None
+
+
+async def add_to_blacklist(token: str, db: Session) -> None:
+    """
+    The add_to_blacklist function adds a token to the blacklist.
+        Args:
+            token (str): The JWT that is being blacklisted.
+            db (Session): The database session object used for querying and updating the database.
+    :param token: str: Pass the token to be blacklisted
+    :param db: Session: Create a new session with the database
+    :return: None
+    """
+    blacklist_token = BlacklistToken(token=token, added_on=datetime.now())
+    db.add(blacklist_token)
+    db.commit()
+    db.refresh(blacklist_token)
+    return None
+
+
+async def is_blacklisted_token(token: str, db: Session) -> bool:
+    """
+    function takes checks if a token is blacklisted.
+    :param token: str: token to be checked
+    :param db: Session: Connect to the database
+    :return: bool
+    """
+    blacklist_token = db.query(BlacklistToken).filter(BlacklistToken.token == token).first()
+    if blacklist_token:
+        return True
+    return False

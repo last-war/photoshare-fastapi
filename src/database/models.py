@@ -8,8 +8,8 @@ Base = declarative_base()
 
 tag_to_image = Table('tag_to_image', Base.metadata,
                      #Column('id', Integer, primary_key=True),
-                     Column('tag_id', Integer, ForeignKey('tags.id')),
-                     Column('image_id', Integer, ForeignKey('images.id')),
+                     Column('tag_id', Integer, ForeignKey('tags.id', ondelete="CASCADE"), nullable=False),
+                     Column('image_id', Integer, ForeignKey('images.id', ondelete="CASCADE"), nullable=False),
                      )
 
 
@@ -73,3 +73,10 @@ class Rating(Base):
     image_id = Column(Integer, ForeignKey(Image.id, ondelete="CASCADE"))
     user = relationship('User', backref="ratings")
     image = relationship('Image', backref="ratings")
+
+
+class BlacklistToken(Base):
+    __tablename__ = 'blacklisted_tokens'
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), unique=True, nullable=False)
+    added_on = Column(DateTime, default=func.now())

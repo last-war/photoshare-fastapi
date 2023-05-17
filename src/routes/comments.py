@@ -5,7 +5,7 @@ from src.database.db import get_db
 from src.database.models import User, UserRole
 from src.repository.comments import create_comment, edit_comment, delete_comment, get_all_user_comments, \
     get_comments_by_image_id
-from src.schemas import CommentBase, CommentModel
+from src.schemas.schemas import CommentBase, CommentModel
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
@@ -60,7 +60,7 @@ async def update_comment(comment_id: int,
     return updated_comment
 
 
-@router.delete('/{comment_id}', response_model=CommentModel, dependencies=[Depends(allowed_operation_delete)])
+@router.delete('/{comment_id}', status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(allowed_operation_delete)])
 async def remove_comment(comment_id: int,
                          db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
@@ -78,7 +78,7 @@ async def remove_comment(comment_id: int,
     if not deleted_comment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
-    return deleted_comment
+    return None
 
 
 @router.get('/user/{user_id}', response_model=CommentModel, dependencies=[Depends(allowed_operation_get)])

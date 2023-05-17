@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
-from src.database.models import User, UserRole
+from src.database.models import User, UserRole, BlacklistToken
 from src.repository import users as repository_users
 from src.services.auth import auth_service
-from src.schemas import UserResponse, UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
+from src.schemas.schemas import UserResponse, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.cloud_image import CloudImage
 from src.services.roles import RoleAccess
 

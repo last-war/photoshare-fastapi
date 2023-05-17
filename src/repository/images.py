@@ -3,7 +3,7 @@ from sqlalchemy import and_, desc
 
 from src.database.models import User, Image
 from src.repository.tags import create_tags
-from src.schemas import ImageModel
+from src.schemas.schemas import ImageModel
 
 
 """

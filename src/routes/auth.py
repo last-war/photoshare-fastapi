@@ -3,7 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2Pas
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
-from src.schemas import UserModel, UserResponse, TokenModel
+from src.schemas.schemas import UserModel, UserResponse, TokenModel
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 
@@ -28,7 +28,7 @@ async def signup(body: UserModel, request: Request, db: Session = Depends(get_db
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
-    body.password_checksum = auth_service.get_password_hash(body.password_checksum)
+    body.password_checksum = auth_service.pwd_context.hash(body.password_checksum)
     new_user = await repository_users.create_user(body, db)
     return new_user
 
@@ -50,13 +50,32 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User is inactive")
-    if not auth_service.verify_password(body.password, user.password_checksum):
+    if not auth_service.pwd_context.verify(body.password, user.password_checksum):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
     # Generate JWT
     access_token = await auth_service.create_access_token(data={"sub": user.email})
     refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
     await repository_users.update_token(user, refresh_token, db)
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+
+
+@router.post("/logout")
+async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
+                 db: Session = Depends(get_db),
+                 current_user: UserModel = Depends(auth_service.get_current_user)):
+    """
+    The logout function is used to logout a user.
+    It takes the credentials,
+    add access token to blacklist, and returns massage.
+
+    :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
+    :param db: Session: Pass a database session to the function
+    :return: JSON message
+    """
+    token = credentials.credentials
+
+    await repository_users.add_to_blacklist(token, db)
+    return {"message": "USER_IS_LOGOUT"}
 
 
 @router.get('/refresh_token', response_model=TokenModel)

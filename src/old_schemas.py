@@ -105,10 +105,7 @@ class CommentModel(CommentBase):
     class Config:
         orm_mode = True
 
-class AverageRatingResponse(BaseModel):
-    average_rating: float
-
-
+        
 class TagModel(BaseModel):
     tag_name: str = Field(max_length=30)
 
@@ -122,16 +119,18 @@ class TagResponse(TagModel):
         
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags_text: Optional[str] = None
+    tags: Optional[str]
+
+    class Config(BaseConfig):
+        arbitrary_types_allowed = True
 
 
-class ImageResponse(BaseModel):
+class ImageResponse(ImageModel):
     id: int
     image_url: str
     user_id: int
     created_at: datetime
     updated_at: Optional[datetime]
-    description: str
     tags: List[TagResponse]
 
     class Config:
@@ -151,6 +150,22 @@ class RatingResponse(RatingModel):
     id: int
     user_id: int
     image_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class AverageRatingResponse(BaseModel):
+    average_rating: float
+
+
+class TagModel(BaseModel):
+    tag_name: str = Field(max_length=30)
+
+
+class TagResponse(TagModel):
+    id: int
+    tag_name: str
 
     class Config:
         orm_mode = True

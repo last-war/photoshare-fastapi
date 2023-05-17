@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy import and_, desc
 
-from src.schemas import TagModel
+from src.schemas.schemas import TagModel
 from src.database.models import Tag, tag_to_image, Image
 from sqlalchemy.orm import Session
 
