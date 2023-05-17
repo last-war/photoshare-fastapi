@@ -37,7 +37,7 @@ async def create_rate(image_id: int, rate: int = Path(description="From one to f
     return new_rate
 
 
-@router.delete("/delete/{rate_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=RatingResponse, dependencies=[Depends(allowed_operation_delete)])
+@router.delete("/delete/{rate_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(allowed_operation_delete)])
 async def delete_rate(rate_id: int, db: Session = Depends(get_db),
                       current_user: User = Depends(auth_service.get_current_user)):
     """

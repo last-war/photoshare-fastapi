@@ -60,8 +60,7 @@ async def update_comment(comment_id: int,
     return updated_comment
 
 
-@router.delete('/{comment_id}', status_code=status.HTTP_204_NO_CONTENT,
-               response_model=CommentModel, dependencies=[Depends(allowed_operation_delete)])
+@router.delete('/{comment_id}', status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(allowed_operation_delete)])
 async def remove_comment(comment_id: int,
                          db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
