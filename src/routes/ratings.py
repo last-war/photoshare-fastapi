@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Path, status, HTTPException
 
 from src.database.models import User, UserRole
 from src.repository import ratings as repository_ratings
-from src.schemas.schemas import RatingResponse
+from src.schemas import RatingResponse, AverageRatingResponse
 from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.services.auth import auth_service
@@ -37,7 +37,7 @@ async def create_rate(image_id: int, rate: int = Path(description="From one to f
     return new_rate
 
 
-@router.delete("/delete/{rate_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(allowed_operation_delete)])
+@router.delete("/delete/{rate_id}", response_model=RatingResponse, dependencies=[Depends(allowed_operation_delete)])
 async def delete_rate(rate_id: int, db: Session = Depends(get_db),
                       current_user: User = Depends(auth_service.get_current_user)):
     """
@@ -54,4 +54,24 @@ async def delete_rate(rate_id: int, db: Session = Depends(get_db),
     deleted_rate = await repository_ratings.delete_rate(rate_id, db, current_user)
     if deleted_rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rate not found or not available.")
-    return None
+    return deleted_rate
+
+
+@router.get("/show_image_rating/{image_id}", response_model=AverageRatingResponse)
+async def calculate_rating(image_id: int, db: Session = Depends(get_db),
+                            current_user: User = Depends(auth_service.get_current_user)):
+    """
+    The calculate_rating function calculate an average rating of the image.
+        The function takes in an integer, which is the id of the image.
+        It also takes in a Session object and a User object as parameters,
+        which are used to access data from the database.
+
+    :param image_id: int: Get the image_id from the url
+    :param db: Session: Get the database session
+    :param current_user: User: Get the current user from the auth_service
+    :return: An average rating object
+    """
+    average_rate = await repository_ratings.calculate_rating(image_id, db, current_user)
+    if average_rate is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found or not available.")
+    return { "average_rating": average_rate }
