@@ -62,7 +62,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
 @router.post("/logout")
 async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
                  db: Session = Depends(get_db),
-                 current_user: User = Depends(auth_service.get_current_user)):
+                 current_user: UserModel = Depends(auth_service.get_current_user)):
     """
     The logout function is used to logout a user.
     It takes the credentials,
