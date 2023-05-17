@@ -59,6 +59,25 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 
+@router.post("/logout")
+async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
+                 db: Session = Depends(get_db),
+                 current_user: User = Depends(auth_service.get_current_user)):
+    """
+    The logout function is used to logout a user.
+    It takes the credentials,
+    add access token to blacklist, and returns massage.
+
+    :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
+    :param db: Session: Pass a database session to the function
+    :return: JSON message
+    """
+    token = credentials.credentials
+
+    await repository_users.add_to_blacklist(token, db)
+    return {"message": "USER_IS_LOGOUT"}
+
+
 @router.get('/refresh_token', response_model=TokenModel)
 async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(security), db: Session = Depends(get_db)):
     """
