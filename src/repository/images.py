@@ -58,7 +58,7 @@ async def create(body: ImageModel, image_url: str, user: User, db: Session):
     :param db: Session: Access the database
     :return: The image object
     """
-    image = Image(**body.dict(), user=user, image_url=image_url, tags=create_tags(body.tags, db))
+    image = Image(description=body.description, user=user, image_url=image_url, tags=await create_tags(body.tags_text, db))
     db.add(image)
     db.commit()
     db.refresh(image)

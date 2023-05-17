@@ -1,13 +1,15 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends, HTTPException, status, Path, APIRouter, Query, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from starlette.responses import StreamingResponse
+from pydantic import ValidationError
 
 from src.database.db import get_db
 from src.database.models import User, UserRole
 from src.schemas.schemas import ImageModel, ImageResponse, ImageTransformationModel
 from src.repository import images as repository_images
+from src.repository import tags as repository_tags
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
@@ -25,24 +27,29 @@ allowed_operation_delete = RoleAccess([UserRole.Admin])
 @router.post("/", response_model=ImageResponse, dependencies=[Depends(allowed_operation_post)],
              status_code=status.HTTP_201_CREATED)
 async def create_image(description: str = Form(),
-                       tags_text: str = Form(),
+                       tags_text: str = Form(None),
                        image_file: UploadFile = File(),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
+
     """
     The create_image function creates a new image in the database.
 
-    :param description: str: Get the description of the image from the form
-    :param tags_text: str: optional string with the tags
-    :param image_file: UploadFile: Upload the image file to the cloud
-    :param current_user: User: Get the user who is currently logged in
-    :param db: Session: Pass the database session to the repository function
-    :return: A new image
+    :param description: str: Get the description from the request body
+    :param tags_text: str: Get the tags from the request body
+    :param image_file: UploadFile: Get the file from the request
+    :param current_user: User: Get the current user
+    :param db: Session: Get the database session
+    :return: A dictionary with the following keys:
+    :doc-author: Trelent
     """
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
     image_url = CloudImage.get_url_for_image(file_name)
-    body = ImageModel(description=description, tags=tags_text)
+    try:
+        body = ImageModel(description=description, tags_text=tags_text)
+    except ValidationError:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="UNPROCESSABLE_ENTITY")
     image = await repository_images.create(body, image_url, current_user, db)
     return image
 
@@ -52,24 +59,32 @@ async def create_image(description: str = Form(),
 async def create_transformation_image(body: ImageTransformationModel,
                                       current_user: User = Depends(auth_service.get_current_user),
                                       db: Session = Depends(get_db)):
-    """
-    The create_transformation_image function creates a new image transformation.
-        The function takes in the following parameters:
-            body (ImageTransformationModel): A JSON object containing the id of an existing image and a string representing
-                the desired transformation to be applied to that image. The possible transformations are as follows:
-                    &quot;blur&quot;, &quot;brightness&quot;, &quot;contrast&quot;, &quot;crop_center&quot;, &quot;flip_horizontal&quot; ,
-                    &quot;flip_vertical&quot; ,  	&quot;grayscale&quot; ,  	&quot;invert&quot;,&quot;pixelate&quot;,&quot;rotate90&quot;,&quot;rotate180&quot;,&quot;rotate270&quot;.
 
-    :param body: ImageTransformationModel: Get the id of the image to transform and
-    :param current_user: User: Get the current user from the database
-    :param db: Session: Access the database
-    :return: The image that was created
+    """
+    The create_transformation_image function creates a new image in the database.
+        The function takes an ImageTransformationModel object as input, which contains the id of the original image and
+        transformation to be applied on it. It then uses CloudImage class to get a url for transformed image from cloudinary,
+        checks if there is already an entry with that url in database and if not creates one.
+
+    :param body: ImageTransformationModel: Get the id of the image that is to be transformed
+    :param current_user: User: Get the user from the database
+    :param db: Session: Get the database connection
+    :return: A new image with the transformation applied
+    :doc-author: Trelent
     """
     image = await repository_images.get_image_from_id(body.id, current_user, db)
     if not image:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     transformation_image_url = CloudImage.get_transformation_image(image.image_url, body.transformation)
-    body = ImageModel(description=image.description, tags=image.tags)
+
+    tags_in_text = None
+    if len(image.tags) > 0:
+        tags = image.tags
+        tags_in_text = f"#"
+        for tag in tags:
+            tags_in_text += tag.tag_name
+
+    body = ImageModel(description=image.description, tags_text=tags_in_text)
     image_in_db = await repository_images.get_image_from_url(transformation_image_url, current_user, db)
     if image_in_db:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Resource already exists")
