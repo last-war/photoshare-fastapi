@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from starlette import status
 
-from src.schemas import RatingModel
 from src.database.models import Rating, User, Image
 
 
@@ -56,22 +55,3 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Rating | None:
         db.delete(rate)
         db.commit()
     return rate
-
-async def calculate_rating(image_id: int, db: Session, user: User) -> float | None:
-    """
-    The calculate_rating function calculate an average rating of the image.
-        Args:
-            image_id (int): The id of the image for calculating rating.
-            db (Session): A connection to the database.
-
-    :param image_id: int: Specify the id of the image for calculating
-    :param db: Session: Access the database
-    :param user: User: Check if the user is logged in
-    :return: The average rating of the image
-    """
-    image_ratings = db.query(Rating).filter(Rating.image_id == image_id).all()
-    if image_ratings:
-        rates = [rate.rate for rate in image_ratings]
-        rating = round(sum(rates) / len(rates), 2)
-        return rating
-    
