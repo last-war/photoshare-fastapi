@@ -2,14 +2,12 @@ import hashlib
 import re
 from io import BytesIO
 from uuid import uuid4
-import base64
 
 import qrcode
 import cloudinary
 import cloudinary.uploader
 from fastapi import HTTPException
 from starlette import status
-from starlette.responses import StreamingResponse
 
 from src.conf.config import settings
 

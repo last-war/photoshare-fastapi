@@ -5,7 +5,7 @@ from src.database.db import get_db
 from src.database.models import User, UserRole
 from src.repository.comments import create_comment, edit_comment, delete_comment, get_all_user_comments, \
     get_comments_by_image_id
-from src.schemas.schemas import CommentBase, CommentModel
+from src.schemas.comments import CommentBase, CommentModel
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 

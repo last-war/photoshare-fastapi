@@ -4,7 +4,7 @@ from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
 from src.database.models import User, UserRole, BlacklistToken
-from src.schemas.schemas import UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
+from src.schemas.users import UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
