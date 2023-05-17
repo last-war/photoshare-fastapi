@@ -83,7 +83,7 @@ async def delete_tag(tag_name: str, db: Session) -> Tag | None:
     :param db: Session: current session to db
     :return: The deleted tag if found in database
     """
-    tag = find_tag(tag_name, db)
+    tag = await find_tag(tag_name, db)
     db.add(tag)
     if tag:
         db.delete(tag)

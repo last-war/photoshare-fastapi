@@ -119,7 +119,7 @@ class TagResponse(TagModel):
         
 class ImageModel(BaseModel):
     description: str = Field('description', min_length=20, max_length=255)
-    tags_text: Optional[str]
+    tags_text: Optional[str] = None
 
 
 class ImageResponse(BaseModel):
