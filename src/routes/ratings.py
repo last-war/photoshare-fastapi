@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Path, status, HTTPException
 
 from src.database.models import User, UserRole
 from src.repository import ratings as repository_ratings
-from src.schemas.schemas import RatingResponse, AverageRatingResponse
+from src.schemas.ratings import RatingResponse, AverageRatingResponse
 from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.services.auth import auth_service
