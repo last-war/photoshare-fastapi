@@ -23,13 +23,15 @@ async def post_comment(image_id: int,
                        db: Session = Depends(get_db),
                        current_user: User = Depends(auth_service.get_current_user)):
     """
-    The post_comment function creates a new comment for an image.
+    Creates a new comment for an image.
+    Arguments:
+        image_id (int): ID of the image that the comment is being made on
+        body (CommentBase): Pass the comment_text from the request body to the function
+        db (Session): SQLAlchemy session object for accessing the database
+        current_user (User): the current user attempting to delete the comment
 
-    :param image_id: int: Specify the image that the comment is being posted to
-    :param body: CommentBase: Get the comment body from the request
-    :param db: Session: Pass the database session to the function
-    :param current_user: User: Get the user who is making the request
-    :return: A comment object
+    Returns:
+        Comment: the Comment object representing the modified comment
     """
 
     comment = await create_comment(image_id, body, db, current_user)
@@ -42,14 +44,19 @@ async def update_comment(comment_id: int,
                          body: CommentBase,
                          db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
-    """
-    The update_comment function updates a comment in the database.
 
-    :param comment_id: int: Specify the comment that is being updated
-    :param body: CommentBase: Get the body of the comment
-    :param db: Session: Get the database session
-    :param current_user: User: Get the current user
-    :return: The updated comment object
+    """
+    Modifies the specified comment in the database, if the current user has permission to do so.
+    If comment with requested id does not exist raise HTTPException with status HTTP_404_NOT_FOUND
+
+    Arguments:
+        comment_id (int): ID of the comment to be deleted
+        db (Session): SQLAlchemy session object for accessing the database
+        body (CommentBase): Pass the comment_text from the request body to the function
+        current_user (User): the current user attempting to edite the comment
+
+    Returns:
+        Comment: the Comment object representing the modified comment,
     """
 
     updated_comment = await edit_comment(comment_id, body, db, current_user)
@@ -65,13 +72,17 @@ async def remove_comment(comment_id: int,
                          db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
     """
-    The remove_comment function deletes a comment from the database.
+    Deletes the specified comment from the database, if the current user has permission to do so.
+    If comment with requested id does not exist raise HTTPException with status HTTP_404_NOT_FOUND
 
-    :param comment_id: int: Specify the id of the comment to be deleted
-    :param db: Session: Pass the database session to the function
-    :param current_user: User: Get the current user from the database
-    :return: A comment object
-    """
+        Arguments:
+            comment_id (int): ID of the comment to be deleted
+            db (Session): SQLAlchemy session object for accessing the database
+            current_user (User): the current user attempting to delete the comment
+
+        Returns:
+            None: If comment was success delete
+        """
 
     deleted_comment = await delete_comment(comment_id, db, current_user)
 
@@ -88,17 +99,18 @@ async def show_user_comments(user_id: int,
                              limit: int = 10):
 
     """
-    The show_user_comments function returns a list of comments made by the user with the given ID.
-    The function takes in an integer representing the user's ID, and two optional parameters: skip and limit.
-    Skip is used to specify how many comments should be skipped before returning results, while limit specifies how many results should be returned.
+    Gets a list of comments made by the specified user.
 
-    :param user_id: int: Get the comments of a specific user
-    :param db: Session: Pass the database session to the function
-    :param skip: int: Skip the first n comments
-    :param limit: int: Limit the number of comments to be returned
-    :return: A list of comments
+    Arguments:
+        skip (int): number of comments to skip in the search
+        limit (int): maximum number of comments to retrieve
+        user_id (int): ID of the user to retrieve comments for
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Comment] | None: a list of Comment objects representing the user's comments,
+        or None if no matching comments were found
     """
-
     comments = await get_all_user_comments(skip, limit, user_id, db)
     return comments
 
@@ -110,14 +122,17 @@ async def show_comments(image_id: int,
                         limit: int = 10):
 
     """
-    The show_comments function returns a list of comments for the image with the given ID.
+    Gets all comments of the specified image from the database.
 
-    :param image_id: int: Get the image id from the url
-    :param db: Session: Get the database session
-    :param skip: int: Skip the first n comments
-    :param limit: int: Limit the number of comments returned
-    :param : Get the image id from the url
-    :return: A list of comments for a given image
+    Arguments:
+        skip (int): number of comments to skip in the search
+        limit (int): maximum number of comments to retrieve
+        image_id (int): ID of the image to retrieve comments for
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Comment] | None: a list of Comment objects representing all comments,
+        or None if no matching comments were found
     """
 
     comments = await get_comments_by_image_id(skip, limit, image_id, db)
