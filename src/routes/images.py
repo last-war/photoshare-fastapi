@@ -12,7 +12,7 @@ from src.repository import images as repository_images
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
-
+from src.services.tags import create_transformation_tags
 
 router = APIRouter(prefix="/images", tags=['images'])
 
@@ -78,10 +78,7 @@ async def create_transformation_image(body: ImageTransformationModel,
 
     tags_in_text = None
     if len(image.tags) > 0:
-        tags = image.tags
-        tags_in_text = f"#"
-        for tag in tags:
-            tags_in_text += tag.tag_name
+        tags_in_text = create_transformation_tags(image.tags)
 
     body = ImageModel(description=image.description, tags_text=tags_in_text)
     image_in_db = await repository_images.get_image_from_url(transformation_image_url, current_user, db)
