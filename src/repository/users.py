@@ -3,10 +3,9 @@ from datetime import datetime
 from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
-from src.database.models import User, UserRole, BlacklistToken
+from src.database.models import User, BlacklistToken
 from src.schemas.users import UserModel, UserChangeRole, UserUpdate, UserUpdateAdmin, UserShow
 from src.services.auth import auth_service
-from src.services.roles import RoleAccess
 
 
 async def get_user_by_email(email: str, db: Session) -> User | None:
@@ -89,7 +88,7 @@ async def update_user(body: UserUpdate, user: User, db: Session) -> User | None:
         user.name = body.name
         user.email = body.email
         user.user_pic_url = body.user_pic_url
-        user.password_checksum = auth_service.get_password_hash(body.password_checksum)
+        user.password_checksum = auth_service.pwd_context.hash(body.password_checksum)
         user.updated_at = datetime.now()
         db.commit()
     return user
@@ -118,7 +117,7 @@ async def update_user_by_admin(body: UserUpdateAdmin, user: User, db: Session) -
         user_to_update.is_active = body.is_active
         user_to_update.role = body.role
         user_to_update.user_pic_url = body.user_pic_url
-        user_to_update.password_checksum = auth_service.get_password_hash(body.password_checksum)
+        user_to_update.password_checksum = auth_service.pwd_context.hash(body.password_checksum)
         user_to_update.updated_at = datetime.now()
         db.commit()
         return user_to_update
