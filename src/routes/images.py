@@ -7,9 +7,8 @@ from pydantic import ValidationError
 
 from src.database.db import get_db
 from src.database.models import User, UserRole
-from src.schemas.schemas import ImageModel, ImageResponse, ImageTransformationModel
+from src.schemas.images import ImageModel, ImageResponse, ImageTransformationModel
 from src.repository import images as repository_images
-
 from src.services.cloud_image import CloudImage
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess

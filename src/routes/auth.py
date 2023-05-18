@@ -3,7 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2Pas
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
-from src.schemas.schemas import UserModel, UserResponse, TokenModel
+from src.schemas.users import UserModel, UserResponse, TokenModel
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 

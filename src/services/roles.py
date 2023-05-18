@@ -6,11 +6,6 @@ from src.database.models import User, UserRole
 from src.services.auth import auth_service
 
 
-"""
-Service for the interaction of user roles.
-"""
-
-
 class RoleAccess:
     def __init__(self, allowed_roles: List[UserRole]):
         """
