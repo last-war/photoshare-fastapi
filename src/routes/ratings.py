@@ -1,8 +1,10 @@
+from typing import List
 from fastapi import APIRouter, Depends, Path, status, HTTPException
 
 from src.database.models import User, UserRole
 from src.repository import ratings as repository_ratings
 from src.schemas.ratings import RatingResponse, AverageRatingResponse
+from src.schemas.images import ImageResponse
 from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.services.auth import auth_service
@@ -75,3 +77,24 @@ async def calculate_rating(image_id: int, db: Session = Depends(get_db),
     if average_rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rating not found or not available.")
     return { "average_rating": average_rate }
+
+
+@router.get("/show_images_by_rating", response_model=List[ImageResponse])
+async def show_images_by_rating(to_decrease: bool, db: Session = Depends(get_db),
+                            current_user: User = Depends(auth_service.get_current_user)):
+    """
+    The show_images_by_rating function show all images, sorted by rating.
+        The function takes a boolean value that indicates the direction of sorting, 
+        to increase the rating or to decrease it.
+        It also takes in a Session object and a User object as parameters,
+        which are used to access data from the database.
+
+    :param to_decrease: bool: Indicates the direction of sorting.
+    :param db: Session: Get the database session
+    :param current_user: User: Get the current user from the auth_service
+    :return: A list of Images objects, sorted by rating
+    """
+    images_by_rating = await repository_ratings.show_images_by_rating(to_decrease, db, current_user)
+    if images_by_rating is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Images not found or not available.")
+    return images_by_rating
