@@ -9,13 +9,15 @@ from src.schemas.comments import CommentBase
 
 async def create_comment(image_id: int, body: CommentBase, db: Session, user: User) -> Comment:
     """
-    The create_comment function creates a new comment in the database.
+    Creates a new comment in the database.
+    Arguments:
+        image_id (int): ID of the image that the comment is being made on
+        body (CommentBase): Pass the comment_text from the request body to the function
+        db (Session): SQLAlchemy session object for accessing the database
+        user (User): the current user attempting to delete the comment
 
-    :param image_id: int: Specify the image that the comment is being made on
-    :param body: CommentBase: Pass the comment_text from the request body to the function
-    :param db: Session: Access the database
-    :param user: User: Get the user id from the token
-    :return: A comment object
+    Returns:
+        Comment: the Comment object representing the modified comment
     """
     comment = Comment(user_id=user.id,
                       image_id=image_id,
@@ -29,16 +31,17 @@ async def create_comment(image_id: int, body: CommentBase, db: Session, user: Us
 
 async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: User) -> Comment | None:
     """
-    The edit_comment function takes in a comment_id, body, db and user.
-    It then queries the database for the comment with that id. If it exists,
-    it checks if the user is an admin or moderator or if they are the owner of
-    that particular comment. If so, it updates their text and updated_at time to now.
+    Modifies the specified comment in the database, if the current user has permission to do so.
 
-    :param comment_id: int: Find the comment in the database
-    :param body: CommentBase: Pass the updated comment text to the function
-    :param db: Session: Access the database
-    :param user: User: Check if the user is an admin or moderator,
-    :return: A comment or none if the comment_id is invalid
+    Arguments:
+        comment_id (int): ID of the comment to be deleted
+        db (Session): SQLAlchemy session object for accessing the database
+        body (CommentBase): Pass the comment_text from the request body to the function
+        user (User): the current user attempting to edite the comment
+
+    Returns:
+        Comment | None: the Comment object representing the modified comment,
+        or None if the user have no permission to edite the comment or if no matching comment exists in the database
     """
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
     if comment:
@@ -51,13 +54,18 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
 
 async def delete_comment(comment_id: int, db: Session, user: User) -> Comment | None:
     """
-    The delete_comment function deletes a comment from the database.
+    Deletes the specified comment from the database, if the current user has permission to do so.
 
-    :param comment_id: int: Find the comment to delete
-    :param db: Session: Pass the database session to the function
-    :param user: User: Check if the user is an admin or moderator
-    :return: The deleted comment if it exists, and none otherwise
+    Arguments:
+        comment_id (int): ID of the comment to be deleted
+        db (Session): SQLAlchemy session object for accessing the database
+        user (User): the current user attempting to delete the comment
+
+    Returns:
+        Comment | None: the Comment object representing the deleted comment,
+        or None if the user have no permission to delete the comment or if no matching comment exists in the database
     """
+
     if user.role not in [UserRole.Admin, UserRole.Moderator]:
         return
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
@@ -68,35 +76,35 @@ async def delete_comment(comment_id: int, db: Session, user: User) -> Comment | 
 
 
 async def get_all_user_comments(skip: int, limit: int, user_id: int, db: Session) -> List[Comment] | None:
-
     """
-    The get_all_user_comments function returns a list of comments made by the user with the given id.
-    The function takes in three parameters: skip, limit, and user_id.
-    Skip is an integer that determines how many comments to skip before returning results.
-    Limit is an integer that determines how many results to return after skipping a certain number of comments (determined by skip).
-    User_id is an integer that represents the id of the user whose comments are being returned.
+    Gets all comments from the specified user from the database.
 
-    :param skip: int: Skip the first n comments
-    :param limit: int: Limit the number of comments returned
-    :param user_id: int: Filter the comments by user_id
-    :param db: Session: Pass the database session to the function
-    :return: A list of comments that belong to a specific user
+    Arguments:
+        skip (int): number of comments to skip in the search
+        limit (int): maximum number of comments to retrieve
+        user_id (int): ID of the user to retrieve comments for
+        db (Session): SQLAlchemy session object for accessing the database
 
+    Returns:
+        List[Comment] | None: a list of Comment objects representing the user's comments,
+        or None if no matching comments were found
     """
+
     return db.query(Comment).filter(Comment.user_id == user_id).offset(skip).limit(limit).all()
 
 
-async def get_comments_by_image_id (skip: int, limit: int, image_id: int, db: Session) -> List[Comment] | None:
-
+async def get_comments_by_image_id(skip: int, limit: int, image_id: int, db: Session) -> List[Comment] | None:
     """
-    The get_comments_by_image_id function returns a list of comments associated with the image_id provided.
-    The skip and limit parameters are used to paginate through the results.
+    Gets all comments of the specified image from the database.
 
-    :param skip: int: Skip a number of comments in the database
-    :param limit: int: Limit the number of comments returned
-    :param image_id: int: Filter the comments by image_id
-    :param db: Session: Pass the database session to the function
-    :return: A list of comments for a particular image
+    Arguments:
+        skip (int): number of comments to skip in the search
+        limit (int): maximum number of comments to retrieve
+        image_id (int): ID of the image to retrieve comments for
+        db (Session): SQLAlchemy session object for accessing the database
 
+    Returns:
+        List[Comment] | None: a list of Comment objects representing all comments,
+        or None if no matching comments were found
     """
     return db.query(Comment).filter(Comment.image_id == image_id).offset(skip).limit(limit).all()
