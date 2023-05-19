@@ -21,6 +21,8 @@ def parse_tags(tags_string: str) -> list[str]:
     for cur_tag in raw_tag:
         if cur_tag[:1] == '#':
             result.append(cur_tag[1:])
+            if len(result) == 5:
+                return result
     return result
 
 
@@ -37,8 +39,6 @@ async def create_tags(tags_string, db: Session) -> List[Tag]:
     result = []
     rw_tags = parse_tags(tags_string)
     for tag_name in rw_tags:
-        if len(result) == 4:
-            return result
         tag = await find_tag(tag_name, db)
         if tag:
             result.append(tag)

@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status, HTTPException
 
 from src.database.models import UserRole
@@ -15,7 +17,7 @@ allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator])
 allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 
-@router.post("/{tags_string}", response_model=TagResponse, dependencies=[Depends(allowed_operation_post)],
+@router.post("/{tags_string}", response_model=List[TagResponse], dependencies=[Depends(allowed_operation_post)],
              status_code=status.HTTP_201_CREATED)
 async def create_tags(tags_string: str, db: Session = Depends(get_db)):
     """
