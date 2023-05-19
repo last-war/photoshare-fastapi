@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_, func, desc
 from starlette import status
 
 from src.database.models import Rating, User, Image
@@ -29,11 +29,7 @@ async def create_rate(image_id: int, rate: int, db: Session, user: User) -> Rati
     elif already_rated:
         raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to rate twice.")
     elif image_exists:
-        new_rate = Rating(
-            image_id=image_id,
-            rate=rate,
-            user_id=user.id
-        )
+        new_rate = Rating(image_id=image_id, rate=rate, user_id=user.id)
         db.add(new_rate)
         db.commit()
         db.refresh(new_rate)
@@ -59,6 +55,7 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Rating | None:
         db.commit()
     return rate
 
+
 async def calculate_rating(image_id: int, db: Session, user: User) -> float | None:
     """
     The calculate_rating function calculate an average rating of the image.
@@ -72,11 +69,8 @@ async def calculate_rating(image_id: int, db: Session, user: User) -> float | No
     :param user: User: Check if the user is logged in
     :return: The average rating of the image
     """
-    image_ratings = db.query(Rating).filter(Rating.image_id == image_id).all()
-    if image_ratings:
-        rates = [rate.rate for rate in image_ratings]
-        rating = round(sum(rates) / len(rates), 2)
-        return rating
+    rating = db.query(func.avg(Rating.rate)).filter(Rating.image_id == image_id).scalar()
+    return rating
     
 
 async def show_images_by_rating(to_decrease: bool, db: Session, user: User) -> List[Image] | None:
@@ -87,18 +81,11 @@ async def show_images_by_rating(to_decrease: bool, db: Session, user: User) -> L
             db (Session): A connection to the database.
             user (User): The User object which asks for a list of sorted images
     """
-    images = db.query(Image).all()
-    if images:
-        images_with_rating = []
-        for image in images:
-            image_ratings = db.query(Rating).filter(Rating.image_id == image.id).all()
-
-            if image_ratings:
-                rates = [rate.rate for rate in image_ratings]
-                rating = round(sum(rates) / len(rates), 2)
-            else:
-                rating = 0
-            images_with_rating.append({ "rating": rating,
-                                        "image" : image})
-        images_with_rating.sort(key=lambda x: x["rating"], reverse=to_decrease)
-        return [image["image"] for image in images_with_rating]
+    if to_decrease:
+        images = db.query(Image, func.avg(Rating.rate).label('rate')).join(Rating).order_by(desc('rate')).group_by(Image).all()
+    else:
+        images = db.query(Image, func.avg(Rating.rate).label('rate')).join(Rating).order_by('rate').group_by(Image).all()
+    rez = []
+    for image in images:
+        rez.append(image.Image)
+    return rez

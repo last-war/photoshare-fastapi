@@ -1,9 +1,9 @@
 from typing import List
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
-from src.database.models import User, Comment, UserRole
+from src.database.models import User, Comment
 from src.schemas.comments import CommentBase
 
 
@@ -43,12 +43,11 @@ async def edit_comment(comment_id: int, body: CommentBase, db: Session, user: Us
         Comment | None: the Comment object representing the modified comment,
         or None if the user have no permission to edite the comment or if no matching comment exists in the database
     """
-    comment = db.query(Comment).filter(Comment.id == comment_id).first()
+    comment = db.query(Comment).filter(and_(Comment.id == comment_id, Comment.user_id == user.id)).first()
     if comment:
-        if user.role in [UserRole.Admin, UserRole.Moderator] or comment.user_id == user.id:
-            comment.comment_text = body.comment_text
-            comment.updated_at = func.now()
-            db.commit()
+        comment.comment_text = body.comment_text
+        comment.updated_at = func.now()
+        db.commit()
     return comment
 
 
@@ -66,8 +65,6 @@ async def delete_comment(comment_id: int, db: Session, user: User) -> Comment | 
         or None if the user have no permission to delete the comment or if no matching comment exists in the database
     """
 
-    if user.role not in [UserRole.Admin, UserRole.Moderator]:
-        return
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
     if comment:
         db.delete(comment)
