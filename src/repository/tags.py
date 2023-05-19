@@ -102,8 +102,7 @@ async def get_images_by_tag(tag: str, limit: int, offset: int, db: Session) -> L
     :param db: Session: Pass the database session to the function
     :return: A list of image objects
     """
-    tag_db = db.query(Tag).filter(Tag.tag_name == tag).first()
-    images_ids = db.query(tag_to_image).filter(Tag.id == tag_db.id).all()
-    images = db.query(Image).filter(and_(Image.id.in_(images_ids), Image.is_deleted == False)).\
-        order_by(desc(Image.created_at)).limit(limit).offset(offset).all()
+    images = db.query(Image).join(tag_to_image).join(Tag).filter(and_(Tag.tag_name == tag, Image.is_deleted == False))\
+        .order_by(desc(Image.created_at)).limit(limit).offset(offset).all()
+
     return images
