@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -5,7 +7,7 @@ from src.database.db import get_db
 from src.database.models import User, UserRole
 from src.repository.comments import create_comment, edit_comment, delete_comment, get_all_user_comments, \
     get_comments_by_image_id
-from src.schemas.comments import CommentBase, CommentModel
+from src.schemas.comments import CommentBase, CommentResponse
 from src.services.auth import auth_service
 from src.services.roles import RoleAccess
 
@@ -17,7 +19,7 @@ allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole
 allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 
-@router.post('/{image_id}', response_model=CommentBase, dependencies=[Depends(allowed_operation_post)])
+@router.post('/{image_id}', response_model=CommentResponse, dependencies=[Depends(allowed_operation_post)])
 async def post_comment(image_id: int,
                        body: CommentBase,
                        db: Session = Depends(get_db),
@@ -39,7 +41,7 @@ async def post_comment(image_id: int,
     return comment
 
 
-@router.put('/{comment_id}', response_model=CommentBase, dependencies=[Depends(allowed_operation_put)])
+@router.put('/{comment_id}', response_model=CommentResponse, dependencies=[Depends(allowed_operation_put)])
 async def update_comment(comment_id: int,
                          body: CommentBase,
                          db: Session = Depends(get_db),
@@ -92,7 +94,7 @@ async def remove_comment(comment_id: int,
     return None
 
 
-@router.get('/user/{user_id}', response_model=CommentModel, dependencies=[Depends(allowed_operation_get)])
+@router.get('/user/{user_id}', response_model=List[CommentResponse], dependencies=[Depends(allowed_operation_get)])
 async def show_user_comments(user_id: int,
                              db: Session = Depends(get_db),
                              skip: int = 0,
@@ -115,7 +117,7 @@ async def show_user_comments(user_id: int,
     return comments
 
 
-@router.get('/image/{image_id}', response_model=CommentModel, dependencies=[Depends(allowed_operation_get)])
+@router.get('/image/{image_id}', response_model=List[CommentResponse], dependencies=[Depends(allowed_operation_get)])
 async def show_comments(image_id: int,
                         db: Session = Depends(get_db),
                         skip: int = 0,
