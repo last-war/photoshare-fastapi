@@ -9,8 +9,9 @@ class RatingModel(BaseModel):
     rate: int
 
 
-class RatingResponse(RatingModel):
+class RatingResponse(BaseModel):
     id: int
+    rate: int
     user_id: int
     image_id: int
 
