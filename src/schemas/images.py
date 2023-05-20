@@ -6,7 +6,7 @@ from src.schemas.tags import TagResponse
 
 
 class ImageModel(BaseModel):
-    description: str = Field('description', min_length=20, max_length=255)
+    description: str = Field('description min_length 20 simbols', min_length=20, max_length=255)
     tags_text: Optional[str] = Field(None, max_length=25)
 
 
@@ -25,6 +25,4 @@ class ImageResponse(BaseModel):
 
 class ImageTransformationModel(BaseModel):
     id: int
-    transformation: str
-
-
+    transformation: str = "standard"
