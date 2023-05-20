@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, EmailStr
 
 class UserModel(BaseModel):
     login: str = Field(min_length=4, max_length=12)
-    email: EmailStr
+    email: str = Field(min_length=4, max_length=120)
     password_checksum: str = Field(min_length=6)
 
 
