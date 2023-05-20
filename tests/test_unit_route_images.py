@@ -1,47 +1,45 @@
-import unittest
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch
-from src.services.cloud_image import CloudImage
-from src.repository import images as repository_images
+
+from pytest import fixture, mark
+
+from src.database.models import User, UserRole
+from fastapi import status
+
+from src.services.auth import Auth
+from src.repository.users import update_token
 
 
-from main import app
+@fixture(scope='function')
+def token(client, user, session):
+    response = client.post("/api/auth/signup", json={"login": "deadpool", "email": "deadpool@example.com",
+                                                     "password_checksum": "123456789"})
+    current_user: User = session.query(User).filter(User.email == user.get('email')).first()
+    current_user.role = UserRole.Admin
+    session.commit()
+    print(response.json())
+    response = client.post("/api/auth/login", json={
+                            "grant_type": "",
+                            "username": "deadpool@example.com",
+                            "password": "123456789",
+                            "scope": "",
+                            "client_id": "",
+                            "client_secret": ""}, content='application/x-www-form-urlencoded', )
+    print(response.json())
+    data = response.json()
+    return data["access_token"]
 
-
-class TestCreateImage(unittest.TestCase):
-    def setUp(self):
-        self.client = TestClient(app)
-
-    def test_create_image_success(self):
-        response = self.client.post(
-            "/images/",
-            headers={"X-Token": "coneofsilence"},
-            json={"id": "foobar", "title": "Foo Bar", "description": "The Foo Barters"},
-        )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json() == {
-    "id": 0,
-    "image_url": "string",
-    "user_id": 0,
-    "created_at": "2023-05-19T19:48:22.217Z",
-    "updated_at": "2023-05-19T19:48:22.217Z",
-    "description": "string",
-    "tags": [
-            {
-                "id": 0,
-                "tag_name": "string"
-            }
-            ]
-    })
-
-    def test_your_route_success(self):
-        # Make a request to your route
-        response = self.client.get('/')
-
-        # Assert the expected response
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'message': 'Welcome to the FAST API from team 6'})
-
-
-if __name__ == '__main__':
-    unittest.main()
+def test_create_image(client, token):
+    image_url = 'https://res.cloudinary.com/dy9mhswnt/image/upload/c_fill,g_faces,h_500,r_max,w_500/v1/photoshare' \
+                '/473db2aa2c097073b2e971767d76f543960ce141f4acf4671e82369de8526e9e'
+    response = client.post(
+        "/api/images",
+        json={"description": "test_image_test_image_test_image_test_image",
+              "tags_text": "#python",
+              "image_url": image_url, },
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == status.HTTP_201_CREATED, response.text
+    data = response.json()
+    assert data["description"] == "test_image_test_image_test_image_test_image"
+    assert data["id"] == 1
+    assert "id" in data

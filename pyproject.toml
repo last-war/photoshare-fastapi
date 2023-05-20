@@ -22,11 +22,21 @@ python-jose = "^3.3.0"
 python-multipart = "^0.0.6"
 pydentic = {extras = ["email"], version = "^0.0.1.dev3"}
 qrcode = "^7.4.2"
+pytest = "^7.3.1"
+pytest-mock = "^3.10.0"
+pytest-asyncio = "^0.21.0"
 
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "^7.0.1"
 
+
+[tool.poetry.group.test.dependencies]
+httpx = "^0.24.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
