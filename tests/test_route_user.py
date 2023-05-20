@@ -1,0 +1,51 @@
+from unittest.mock import MagicMock
+from pytest import fixture
+
+from src.database.models import User, UserRole, Image
+from fastapi import status, UploadFile
+import datetime
+
+
+@fixture(scope='function')
+def token(client, user, session):
+    response = client.post("/api/auth/signup", json={"login": "deadpool",
+                                                     "email": "deadpool@example.com",
+                                                     "password_checksum": "123456789"})
+    current_user: User = session.query(User).filter(User.email == user.get('email')).first()
+    current_user.role = UserRole.Admin
+    session.commit()
+    response = client.post("/api/auth/login",
+                           data={"username": "deadpool@example.com",
+                                 "password": "123456789"},
+                           headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    data = response.json()
+    return data["access_token"]
+
+
+def test_read_users_me(client, token):
+    response = client.get("api/users/me/",
+                          headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_read_users_me_unauthorised(client):
+    response = client.get("api/users/me/")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_read_user_profile_by_username(client, token, user):
+    login = user['login']
+    response = client.get(f"api/users/user/{login}/", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_read_user_profile_by_username_not_found(client, token, user):
+    login = 'test_wrong_login'
+    response = client.get(f"api/users/user/{login}/", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+
+
+
+

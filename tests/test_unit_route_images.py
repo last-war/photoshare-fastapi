@@ -2,7 +2,7 @@ import unittest
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch
 from src.services.cloud_image import CloudImage
-from src.repository import images as repository_images
+from src.repository import images as repository _images
 
 
 from main import app
