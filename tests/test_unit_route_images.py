@@ -23,19 +23,56 @@ def token(client, user, session):
     return data["access_token"]
 
 
+@fixture(scope='function')
+def token_moder(client, user, session):
+    response = client.post("/api/auth/signup", json={"login": "deadpool", "email": "deadpool@example.com",
+                                                     "password_checksum": "123456789"})
+    current_user: User = session.query(User).filter(User.email == user.get('email')).first()
+    current_user.role = UserRole.Moderator
+    session.commit()
+    response = client.post("/api/auth/login", data={
+                            "username": "deadpool@example.com",
+                            "password": "123456789"}, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    data = response.json()
+    return data["access_token"]
+
+
+@fixture(scope='function')
+def token_user(client, user, session):
+    response = client.post("/api/auth/signup", json={"login": "deadpool", "email": "deadpool@example.com",
+                                                     "password_checksum": "123456789"})
+    response = client.post("/api/auth/login", data={
+                            "username": "deadpool@example.com",
+                            "password": "123456789"}, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    data = response.json()
+    return data["access_token"]
+
+
 def test_create_transformation_image(client, token):
     response = client.post("/api/images/transformation")
     assert response.status_code == status.HTTP_200_OK
 
 
-def test_get_images(client, token):
-    response = client.get("/api/images/")
+def test_get_images_by_admin(client, token):
+    response = client.get("/api/images/", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_get_images_by_moder(client, token_moder):
+    response = client.get("/api/images/", headers={"Authorization": f"Bearer {token_moder}"})
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_get_images_by_user(client, token_user):
+    response = client.get("/api/images/", headers={"Authorization": f"Bearer {token_user}"})
     assert response.status_code == status.HTTP_200_OK
 
 
 def test_get_image(client, token):
-    response = client.get("/api/images/{image_id}")
+    response = client.get("/api/images/1", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_200_OK
+    response = client.get("/api/images/100", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_remove_image(client, token):
