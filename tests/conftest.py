@@ -50,15 +50,11 @@ def user():
     return {"login": "deadpool", "email": "deadpool@example.com", "password_checksum": "123456789"}
 
 
-def old_user():
-    return {
-        "id": 1,
-        "login": "test2user@example.com",
-        "email": "test2user@example.com",
-        "role": 1,
-        "updated_at": "2023-05-20T08:01:02.891Z",
-        "user_pic_url": "https://www.gravatar.com/avatar/73b6b594cd7e0736363f6480e3dac9ed",
-        "name": "testuser",
-        "is_active": 1,
-        "password_checksum": "secret"
-        }
+@pytest.fixture(scope="module")
+def user_moder():
+    return {"login": "dead2pool", "email": "dead2pool@example.com", "password_checksum": "123456789"}
+
+
+@pytest.fixture(scope="module")
+def user_user():
+    return {"login": "dead1pool", "email": "dead1pool@example.com", "password_checksum": "123456789"}

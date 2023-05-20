@@ -33,6 +33,7 @@ sphinx = "^7.0.1"
 
 [tool.poetry.group.test.dependencies]
 httpx = "^0.24.1"
+pillow = "^9.5.0"
 
 [build-system]
 requires = ["poetry-core"]
