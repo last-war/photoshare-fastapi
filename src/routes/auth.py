@@ -19,11 +19,13 @@ async def signup(body: UserModel, request: Request, db: Session = Depends(get_db
         The password is hashed using bcrypt and stored in the database.
         A background task sends an email to the user with their username.
 
-    :param body: UserModel: Pass the data from the request body to the function
-    :param request: Request: Get the base_url of the application
-    :param db: Session: Get a database session
-    :return: The created user
-    :doc-author: Trelent
+    Arguments:
+        body (UserModel): Pass the data from the request body to the function
+        db (Session): SQLAlchemy session object for accessing the database
+        request (Request): Get the base_url of the application
+
+    Returns:
+        User: The created user
     """
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
@@ -40,10 +42,12 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
         It takes the username and password from the request body,
         verifies them against the database, and returns an access token if successful.
 
-    :param body: OAuth2PasswordRequestForm: Get the username and password from the request body
-    :param db: Session: Pass a database session to the function
-    :return: A dict with the access_token and refresh_token
-    :doc-author: Trelent
+    Arguments:
+        body (OAuth2PasswordRequestForm): Get the token from the request header
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        dict: JSON access_token / refresh_token / token_type
     """
     user = await repository_users.get_user_by_email(body.username, db)
     if user is None:
@@ -68,9 +72,13 @@ async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
     It takes the credentials,
     add access token to blacklist, and returns massage.
 
-    :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
-    :param db: Session: Pass a database session to the function
-    :return: JSON message
+    Arguments:
+        credentials (HTTPAuthorizationCredentials): Get the token from the request header
+        db (Session): SQLAlchemy session object for accessing the database
+        current_user (UserModel): the current user
+
+    Returns:
+        dict: JSON message
     """
     token = credentials.credentials
 
@@ -86,10 +94,12 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(sec
         If the user's current refresh_token does not match what was
             passed into this function then it will return an error.
 
-    :param credentials: HTTPAuthorizationCredentials: Get the token from the request header
-    :param db: Session: Access the database
-    :return: A new access_token and refresh_token
-    :doc-author: Trelent
+    Arguments:
+        credentials (HTTPAuthorizationCredentials): Get the token from the request header
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        dict: JSON access_token - refresh_token - token_type
     """
     token = credentials.credentials
     email = await auth_service.decode_refresh_token(token)
