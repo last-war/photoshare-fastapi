@@ -12,6 +12,12 @@ app = FastAPI()
 
 @app.get("/", description='Main page')
 def root():
+    """
+    Main page definition
+
+    :return: dict: health status
+
+    """
     return {"message": "Welcome to the FAST API from team 6"}
 
 
@@ -21,8 +27,7 @@ def healthchecker(db: Session = Depends(get_db)):
     Health Checker
 
     :param db: database session
-    :return: health status
-    :rtype: dict
+    :return: dict: health status
     """
     try:
         result = db.execute(text("SELECT 1")).fetchone()

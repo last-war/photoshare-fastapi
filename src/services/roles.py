@@ -13,10 +13,11 @@ class RoleAccess:
         It sets up the instance of the class, and takes in any arguments that are required to do so.
         In this case, we're taking in a list of allowed roles.
 
-        :param self: Represent the instance of the class
-        :param allowed_roles: List[UserRole]: Create a list of roles that are allowed to use the command
-        :return: None
-        :doc-author: Trelent
+        Arguments:
+            allowed_roles (List[UserRole]): Create a list of roles that are allowed to use the command
+
+        Returns:
+            None
         """
         self.allowed_roles = allowed_roles
 
@@ -28,11 +29,12 @@ class RoleAccess:
         The current_user argument is provided by Depends(auth_service.get_current_user), which means it will call
         auth_service's getCurrentUser() function and pass its return value as an argument to __call__.
 
-        :param self: Access the class attributes
-        :param request: Request: Get the request object
-        :param current_user: User: Get the current user from the auth_service
-        :return: The decorated function
-        :doc-author: Trelent
+        Arguments:
+            current_user (User): Get the current user from the auth_service
+            request (Request): Get the request object
+
+        Returns:
+            The decorated function
         """
         if current_user.role not in self.allowed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Operation forbidden')

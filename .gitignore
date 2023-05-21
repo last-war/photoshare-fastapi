@@ -69,7 +69,12 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/_build/doctrees/
+docs/_build/_static/
+docs/_build/_templates/
+docs/_build/conf.py
+docs/_build/makefile
+docs/_build/make
 
 # PyBuilder
 .pybuilder/
@@ -228,9 +233,6 @@ instance/
 
 # Scrapy stuff:
 .scrapy
-
-# Sphinx documentation
-docs/_build/
 
 # PyBuilder
 .pybuilder/

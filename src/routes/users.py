@@ -18,8 +18,11 @@ async def read_users_me(current_user: User = Depends(auth_service.get_current_us
     The read_users_me function is a GET request that returns the current user's information.
         It requires authentication, and it uses the auth_service to get the current user.
 
-    :param current_user: User: Get the current user object
-    :return: The current user object
+    Arguments:
+        current_user (User): the current user attempting to delete the comment
+
+    Returns:
+        User: The current user object
     """
     return current_user
 
@@ -30,11 +33,13 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
     """
     The update_avatar_user function updates the avatar of a user.
 
-    :param file: UploadFile: Receive the file from the client
-    :param current_user: User: Get the current user from the database
-    :param db: Session: Access the database
-    :return: The updated user
-    :doc-author: Trelent
+    Arguments:
+        file (UploadFile): object with new role
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        User: object after the change operation
     """
     public_id = CloudImage.generate_name_avatar(current_user.email)
     r = CloudImage.upload(file.file, public_id)
@@ -48,6 +53,17 @@ async def update_user(
         body: UserUpdate,
         user: User = Depends(auth_service.get_current_user),
         db: Session = Depends(get_db)):
+    """
+    Update user
+
+    Arguments:
+        body (UserUpdate): object with new role
+        user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        User: object after the change operation
+    """
     user = await repository_users.update_user(body, user, db)
     if user is None:
         raise HTTPException(
@@ -60,6 +76,17 @@ async def update_user_by_admin(
         body: UserUpdateAdmin,
         user: User = Depends(auth_service.get_current_user),
         db: Session = Depends(get_db)):
+    """
+    Update user just for admin access
+
+    Arguments:
+        body (UserUpdateAdmin): object with new role
+        user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        User: object after the change operation
+    """
     user = await repository_users.update_user_by_admin(body, user, db)
     if user is None:
         raise HTTPException(
@@ -68,10 +95,20 @@ async def update_user_by_admin(
 
 
 @router.put("/change_role", response_model=UserChangeRole, dependencies=[Depends(RoleAccess([UserRole.Admin]))])
-async def change_role(
-        body: UserChangeRole,
-        user: User = Depends(auth_service.get_current_user),
-        db: Session = Depends(get_db)):
+async def change_role(body: UserChangeRole,
+                      user: User = Depends(auth_service.get_current_user),
+                      db: Session = Depends(get_db)):
+    """
+    Change the role of a user
+
+    Arguments:
+        body (UserChangeRole): object with new role
+        user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        User: object after the change operation
+    """
     user = await repository_users.change_role(body, user, db)
     if user is None:
         raise HTTPException(
@@ -81,6 +118,16 @@ async def change_role(
 
 @router.put("/ban_user", response_model=UserResponse, dependencies=[Depends(RoleAccess([UserRole.Admin]))])
 async def ban_user(user_id: int, db: Session = Depends(get_db)):
+    """
+    Take user to ban list
+
+    Arguments:
+        user_id (int): Get the username from the url path
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        User: banned user
+    """
     ban = await repository_users.ban_user(user_id, db)
     if ban is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT_FOUND")
@@ -91,13 +138,15 @@ async def ban_user(user_id: int, db: Session = Depends(get_db)):
 async def read_user_profile_by_username(login: str, db: Session = Depends(get_db),
                                         current_user: User = Depends(auth_service.get_current_user)):
     """
-    function is used to read a user profile by login
     The function takes in the login as an argument and returns the user profile if it exists.
 
-    :param login: str: Get the username from the url path
-    :param db: Session: Pass the database session to the repository layer
-    :param current_user: User: Get the current user's information
-    :return: A userprofile object
+    Arguments:
+        login (str): Get the username from the url path
+        db (Session): SQLAlchemy session object for accessing the database
+        current_user (User): the current user
+
+    Returns:
+        User: A userprofile object
     """
     user_profile = await repository_users.get_user_profile(login, db)
     if user_profile is None:

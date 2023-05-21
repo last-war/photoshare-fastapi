@@ -34,13 +34,15 @@ async def create_image(description: str = Form(),
     """
     The create_image function creates a new image in the database.
 
-    :param description: str: Get the description from the request body
-    :param tags_text: str: Get the tags from the request body
-    :param image_file: UploadFile: Get the file from the request
-    :param current_user: User: Get the current user
-    :param db: Session: Get the database session
-    :return: A dictionary with the following keys:
-    :doc-author: Trelent
+    Arguments:
+        description (str): Get the description from the request body
+        tags_text (str): Get the tags from the request body
+        image_file (UploadFile): Get the file from the request
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Image: the Image object
     """
     file_name = CloudImage.generate_name_image()
     CloudImage.upload(image_file.file, file_name, overwrite=False)
@@ -62,15 +64,17 @@ async def create_transformation_image(body: ImageTransformationModel,
     """
     The create_transformation_image function creates a new image in the database.
         The function takes an ImageTransformationModel object as input, which contains the id of the original image and
-        transformation to be applied on it. It then uses CloudImage class to get a url for transformed image from cloudinary,
-        checks if there is already an entry with that url in database and if not creates one.
+        transformation to be applied on it. It then uses CloudImage class to get a url for transformed image
+        from cloudinary, checks if there is already an entry with that url in database and if not creates one.
         Input examples ->"standard" or "radius" or "grayscale" or "cartoonify" or "vectorize".
 
-    :param body: ImageTransformationModel: Get the id of the image that is to be transformed
-    :param current_user: User: Get the user from the database
-    :param db: Session: Get the database connection
-    :return: A new image with the transformation applied
-    :doc-author: Trelent
+    Arguments:
+        body (ImageTransformationModel): Get the id of the image that is to be transformed
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Image: new image with the transformation applied
     """
     image = await repository_images.get_image_from_id(body.id, current_user, db)
     if not image:
@@ -96,12 +100,14 @@ async def get_images(limit: int = Query(10, le=50), offset: int = 0,
     """
     The get_images function returns a list of images.
 
-    :param limit: int: Limit the number of images returned
-    :param le: Limit the number of images returned to 50
-    :param offset: int: Specify the number of records to skip before returning results
-    :param current_user: User: Get the current user from the database
-    :param db: Session: Get a database session
-    :return: A list of images
+    Arguments:
+        limit (int): Limit the number of images returned
+        offset (int): Specify the number of records to skip before returning results
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Image]: A list of images
     """
     images = await repository_images.get_images(limit, offset, current_user, db)
     if images is None:
@@ -119,11 +125,13 @@ async def get_image(image_id: int = Path(ge=1),
     It also takes a current_user parameter, which is obtained from auth_service and db parameters,
     which are obtained from get_db.
 
-    :param image_id: int: Specify the id of the image that is being requested
-    :param current_user: User: Get the current user from the database
-    :param db: Session: Pass the database session to the repository
-    :return: A list of images
-    :doc-author: Trelent
+    Arguments:
+        image_id (int): Specify the id of the image that is being requested
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Image: image
     """
     image = await repository_images.get_image(image_id, current_user, db)
     if image is None:
@@ -138,11 +146,13 @@ async def remove_image(image_id: int = Path(ge=1),
     """
     The remove_image function removes an image from the database.
 
-    :param image_id: int: Specify the id of the image to be removed
-    :param current_user: User: Get the user_id of the logged in user
-    :param db: Session: Access the database
-    :return: The image that was removed
-    :doc-author: Trelent
+    Arguments:
+        image_id (int): Specify the id of the image to be removed
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        None: The image that was removed
     """
     image = await repository_images.remove(image_id, current_user, db)
     if image is None:
@@ -160,12 +170,14 @@ async def update_description_image(body: ImageModel,
         The function takes in a body, which is an ImageModel object, and an image_id.
         It also takes in a current_user and db objects as dependencies.
 
-    :param body: ImageModel: Get the new description for the image
-    :param image_id: int: Get the image id from the path
-    :param current_user: User: Get the current user
-    :param db: Session: Pass the database session to the repository
-    :return: The updated image
-    :doc-author: Trelent
+    Arguments:
+        body (ImageModel): Get the new description for the image
+        image_id (int): Get the image id from the path
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Image: The updated image
     """
     image = await repository_images.change_description(body, image_id, current_user, db)
     if image is None or image.is_deleted is True:
@@ -180,11 +192,13 @@ async def generate_qrcode(image_id: int = Path(ge=1),
     """
     The generate_qrcode function generates a QR code for the image with the given ID.
 
-    :param image_id: int: Get the image from the database
-    :param current_user: User: Get the current user
-    :param db: Session: Access the database
-    :return: A streamingresponse
-    :doc-author: Trelent
+    Arguments:
+        image_id (int): Get the image id from the path
+        current_user (User): the current user
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        image/png: streamingresponse
     """
     image = await repository_images.get_image(image_id, current_user, db)
     if image is None:

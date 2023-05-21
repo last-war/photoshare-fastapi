@@ -10,6 +10,7 @@ from src.schemas.comments import CommentBase
 async def create_comment(image_id: int, body: CommentBase, db: Session, user: User) -> Comment:
     """
     Creates a new comment in the database.
+
     Arguments:
         image_id (int): ID of the image that the comment is being made on
         body (CommentBase): Pass the comment_text from the request body to the function
@@ -17,7 +18,7 @@ async def create_comment(image_id: int, body: CommentBase, db: Session, user: Us
         user (User): the current user attempting to delete the comment
 
     Returns:
-        Comment: the Comment object representing the modified comment
+        Comment: the Comment object representing the new comment
     """
     comment = Comment(user_id=user.id,
                       image_id=image_id,
