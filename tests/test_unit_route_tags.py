@@ -1,17 +1,25 @@
 import datetime
-from unittest.mock import patch
 
 from pytest import fixture
 
 from src.database.models import Tag, User, UserRole, Image
-from src.schemas.tags import TagModel, TagResponse
 from fastapi import status
-
-from src.services.auth import auth_service
 
 
 @fixture(scope='module')
 def token(client, user, session):
+    """
+    The token function is used to create a user with admin privileges, and then log in as that user.
+    This allows us to test the endpoints that require an admin token.
+
+    Args:
+        client: Make requests to the api
+        user: Create a user in the database
+        session: Make queries to the database
+
+    Returns:
+        A valid access token
+    """
     response = client.post("/api/auth/signup", json={"login": "deadpool", "email": "deadpool@example.com",
                                                      "password_checksum": "123456789"})
     current_user: User = session.query(User).filter(User.email == user.get('email')).first()
@@ -26,6 +34,18 @@ def token(client, user, session):
 
 @fixture(scope='module')
 def token_moder(client, user_moder, session):
+    """
+    The token_moder function is used to create a new user with the role of Moderator.
+    It then logs in as that user and returns the access token for use in other tests.
+
+    Args:
+        client: Create a client for the test
+        user_moder: Create a user with the role of moderator
+        session: Get the current user from the database
+
+    Returns:
+        The token of the moderator
+    """
     response = client.post("/api/auth/signup", json={"login": "dead2pool", "email": "dead2pool@example.com",
                                                      "password_checksum": "123456789"})
     current_user: User = session.query(User).filter(User.email == user_moder.get('email')).first()
@@ -40,6 +60,18 @@ def token_moder(client, user_moder, session):
 
 @fixture(scope='module')
 def token_user(client, user_user, session):
+    """
+    The token_user function is used to create a user and then log them in.
+    It returns the access token of the logged in user.
+
+    Args:
+        client: Make requests to the api
+        user_user: Create a user and the session parameter is used to store that user in the database
+        session: Store the access token in a session variable
+
+    Returns:
+        The access_token
+    """
     response = client.post("/api/auth/signup", json={"login": "dead1pool", "email": "dead1pool@example.com",
                                                      "password_checksum": "123456789"})
     response = client.post("/api/auth/login", data={
@@ -51,6 +83,20 @@ def token_user(client, user_user, session):
 
 @fixture(scope='module')
 def image_user(client, user_user, session):
+    """
+    The image_user function is used to create a new image for the user.
+        It takes two parameters: client and user_user.
+        The client parameter is used to make requests to the API, while the user_user parameter is used as a dictionary of
+        information about an existing User object in our database.
+
+    Args:
+        client: Make requests to the app
+        user_user: Create a user
+        session: Create a new session for the test
+
+    Returns:
+        The image object
+    """
     response = client.post("/api/auth/signup", json={"login": "dead1pool", "email": "dead1pool@example.com",
                                                      "password_checksum": "123456789"})
     current_user: User = session.query(User).filter(User.email == user_user.get('email')).first()
@@ -82,7 +128,6 @@ def test_create_tags(client, session, token):
 
     Returns:
         A 201 status code and a list of dictionaries containing the tag name
-
     """
     tags_string = "test"
     response = client.post("/api/tag/%23test", headers={"Authorization": f"Bearer {token}"})
@@ -97,17 +142,51 @@ def test_create_tags(client, session, token):
 
 
 def test_create_tags_not_authorization(client, session):
+    """
+    The test_create_tags_not_authorization function tests that a user cannot create a tag without authorization.
+
+    Args:
+        client: Make requests to the api
+        session: Create a new database session for the test
+
+    Returns:
+        A 401 unauthorized status code
+    """
     token = "not_valid"
     response = client.post("/api/tag/%23test", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_401_UNAUTHORIZED, response.text
 
 
 def test_create_tags_not_valid_tags(client, session, token):
+    """
+    The test_create_tags_not_valid_tags function tests the POST /api/tag/ endpoint.
+    It does this by sending a request to the endpoint with no data, and then checking that it returns a 404 status code.
+
+    Args:
+        client: Make requests to the api
+        session: Rollback the database after each test
+        token: Authenticate the user
+
+    Returns:
+        404
+    """
     response = client.post("/api/tag/", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
 
 
 def test_get_images_by_tag(client, session, token):
+    """
+    The test_get_images_by_tag function tests the get_images_by_tag function in the tag.py file.
+    The test is successful if it returns a 200 status code and a list of images with tags that match the tag name.
+
+    Args:
+        client: Make requests to the api
+        session: Create a new database session for the test
+        token: Authenticate the user
+
+    Returns:
+        The images that have the tag
+    """
     tag_name = "test"
     limit = 10
     offset = 0
@@ -164,6 +243,18 @@ def test_get_images_by_tag(client, session, token):
 
 
 def test_get_images_by_tag_not_found_images(client, session, token):
+    """
+    The test_get_images_by_tag_not_found_images function tests the get_images_by_tag function in the image.py file
+    to ensure that it returns an empty list when no images are found with a given tag.
+
+    Args:
+        client: Make requests to the api
+        session: Pass the database session to the test function
+        token: Test the get_images_by_tag function with a valid token
+
+    Returns:
+        An empty list
+    """
     limit = 10
     offset = 0
 
@@ -174,6 +265,18 @@ def test_get_images_by_tag_not_found_images(client, session, token):
 
 
 def test_get_one_tag_found(client, session, token):
+    """
+    The test_get_one_tag_found function tests the GET /api/tag/{tag_name} endpoint.
+    It ensures that a tag can be retrieved by its name.
+
+    Args:
+        client: Make requests to the api
+        session: Create a new session for the test
+        token: Authenticate the user
+
+    Returns:
+        A 200 response with the tag data
+    """
     tag = {
         "id": 1,
         "tag_name": "test"
@@ -185,22 +288,86 @@ def test_get_one_tag_found(client, session, token):
 
 
 def test_get_one_tag_not_found(client, session, token):
+    """
+    The test_get_one_tag_not_found function tests the GET /api/tag/{id} endpoint.
+        It ensures that a 404 status code is returned when an invalid tag id is passed in.
+
+    Args:
+        client: Send requests to the api
+        session: Create a new session for the test
+        token: Authenticate the user
+
+    Returns:
+        A 404 status code
+    """
     tag = None
     response = client.get("/api/tag/testnotfound", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
 
 
-# def test_update_tag_found(client, session, token):
-#     new_tag_name = "test_1"
-#
-#     response = client.put("/api/tag/test", headers={"Authorization": f"Bearer {token}"}, json={"tag_name": new_tag_name})
-#
-#     assert response.status_code == status.HTTP_200_OK, response.text
+def test_update_tag_found(client, session, token):
+    """
+    The test_update_tag_found function tests the update_tag function in the tag.py file.
+    It does this by first creating a new tag name, then it uses that to create a response from the client using PUT method
+    to update an existing tag with id 1 and header of token authorization. It then asserts that status code is 200 OK, which means
+    the request was successful and returns what we expected (in this case, it should return updated information for id 1).
+    Finally, it creates an expected response variable to compare against our actual response.
+
+    Args:
+        client: Make requests to the api
+        session: Create a new session for the test
+        token: Authenticate the user
+
+    Returns:
+        A 200 status code and the updated tag
+    """
+    new_tag_name = "test_1"
+
+    response = client.put("/api/tag/1", headers={"Authorization": f"Bearer {token}"}, json={"tag_name": new_tag_name})
+
+    assert response.status_code == status.HTTP_200_OK, response.text
+
+    expected_response = {"id": 1, "tag_name": new_tag_name}
+    assert response.json() == expected_response
+
+
+def test_update_tag_not_found(client, session, token):
+    """
+    The test_update_tag_not_found function tests the update tag endpoint.
+        It does this by first creating a new tag, then attempting to update it with an invalid id.
+        The expected result is that the response status code should be 404 NOT FOUND.
+
+    Args:
+        client: Make requests to the api
+        session: Create a new session for the test
+        token: Authenticate the user
+
+    Returns:
+        A 404 status code
+    """
+    new_tag_name = "test_1"
+
+    response = client.put("/api/tag/999", headers={"Authorization": f"Bearer {token}"}, json={"tag_name": new_tag_name})
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
 
 
 def test_delete_tag_found(client, session, token):
-    response = client.delete("/api/tag/test", headers={"Authorization": f"Bearer {token}"})
+    """
+    The test_delete_tag_found function tests the DELETE /api/tag/{tag_name} endpoint.
+    It does so by first creating a tag with the name &quot;test&quot; and then deleting it.
+    The test passes if the response status code is 204 No Content and if there are no tags in the database with that name.
+
+    Args:
+        client: Send a request to the server
+        session: Access the database
+        token: Pass in the token to the function
+
+    Returns:
+        A 204 status code
+    """
+    response = client.delete("/api/tag/test_1", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == status.HTTP_204_NO_CONTENT, response.text
 
@@ -209,6 +376,19 @@ def test_delete_tag_found(client, session, token):
 
 
 def test_delete_tag_not_found(client, session, token):
+    """
+    The test_delete_tag_not_found function tests the DELETE /api/tag/{name} endpoint.
+    It does so by first creating a tag, then deleting it, and finally attempting to delete it again.
+    The final attempt should fail with a 404 Not Found error.
+
+    Args:
+        client: Make requests to the api
+        session: Create a database session
+        token: Authenticate the user
+
+    Returns:
+        A 404 status code
+    """
     response = client.delete("/api/tag/test", headers={"Authorization": f"Bearer {token}"})
 
     assert response.status_code == status.HTTP_404_NOT_FOUND, response.text
