@@ -1,9 +1,7 @@
-from unittest.mock import MagicMock
 from pytest import fixture
 
-from src.database.models import User, UserRole, Image
-from fastapi import status, UploadFile
-import datetime
+from src.database.models import User, UserRole
+from fastapi import status
 
 
 @fixture(scope='function')
@@ -22,13 +20,11 @@ def token(client, user, session):
     return data["access_token"]
 
 
+
 def test_read_users_me(client, token):
     response = client.get("api/users/me/",
                           headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_200_OK
-
-
-def test_read_users_me_unauthorised(client):
     response = client.get("api/users/me/")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -37,14 +33,25 @@ def test_read_user_profile_by_username(client, token, user):
     login = user['login']
     response = client.get(f"api/users/user/{login}/", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_200_OK
-
-
-def test_read_user_profile_by_username_not_found(client, token, user):
     login = 'test_wrong_login'
     response = client.get(f"api/users/user/{login}/", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
+def test_update_user(client, token):
+    response = client.put("api/users/update_user",
+                          headers={"Authorization": f"Bearer {token}"},
+                          json={
+                              "id": 0,
+                              "email": "string",
+                              "updated_at": "2023-05-21T16:35:59.380Z",
+                              "user_pic_url": "string",
+                              "name": "string",
+                              "password_checksum": "string"})
+    assert response.status_code == status.HTTP_200_OK
+
+    response = client.put("api/users/update_user")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 

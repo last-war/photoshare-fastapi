@@ -50,7 +50,7 @@ def user():
     return {"login": "deadpool", "email": "deadpool@example.com", "password_checksum": "123456789"}
 
 
-
+@pytest.fixture(scope="module")
 def old_user():
     return {
         "id": 1,
