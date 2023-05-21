@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Path
 
 from src.database.models import UserRole
 from src.repository import tags as repository_tag
@@ -64,20 +64,27 @@ async def get_one(tag_name: str, db: Session = Depends(get_db)):
     return tag
 
 
-@router.put("/{tag_name}", response_model=TagResponse, dependencies=[Depends(allowed_operation_put)])
-async def update_tag(body: TagModel, db: Session = Depends(get_db)):
-    """
-    update tag finded by tag name
+@router.put("/{tag_id}", response_model=TagResponse, dependencies=[Depends(allowed_operation_put)])
+async def update_tag(body: TagModel, tag_id: int = Path(ge=1), db: Session = Depends(get_db)):
 
-    :param body: TagModel: all need field to update
-    :param db: Session: current session to db
-    :return: tag object
     """
+    The update_tag function updates a tag in the database.
+        The function takes an id and a body as input, and returns the updated tag.
+        If no tag is found with that id, it raises an HTTP 404 error.
 
-    tag = await repository_tag.edit_tag(body, db)
+    Args:
+        body: TagModel: Get the data from the request body
+        tag_id: int: Find the tag to be deleted
+        db: Session: Get a database session
+
+    Returns:
+        A tagmodel object
+    """
+    tag = await repository_tag.find_tag_by_id(tag_id, db)
     if tag is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
-    return tag
+    edit_tag = await repository_tag.edit_tag(tag, body, db)
+    return edit_tag
 
 
 @router.delete("/{tag_name}", dependencies=[Depends(allowed_operation_delete)], status_code=status.HTTP_204_NO_CONTENT)
