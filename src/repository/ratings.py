@@ -21,14 +21,14 @@ async def create_rate(image_id: int, rate: int, db: Session, user: User) -> Rati
     :param user: User: Get the user_id of the logged in user
     :return: A rating object
     """
-    is_self_image = db.query(Image).filter(and_(Image.id == image_id, Image.user_id == user.id)).first()
+    is_self_image = db.query(Image).filter(Image.id == image_id).first().user_id == user.id
     already_rated = db.query(Rating).filter(and_(Rating.image_id == image_id, Rating.user_id == user.id)).first()
     image_exists = db.query(Image).filter(Image.id == image_id).first()
     if is_self_image:
         raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to rate own image.")
-    elif already_rated:
+    if already_rated:
         raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="It`s not possible to rate twice.")
-    elif image_exists:
+    if image_exists:
         new_rate = Rating(image_id=image_id, rate=rate, user_id=user.id)
         db.add(new_rate)
         db.commit()
@@ -36,7 +36,7 @@ async def create_rate(image_id: int, rate: int, db: Session, user: User) -> Rati
         return new_rate
     
 
-async def delete_rate(rate_id: int, db: Session, user: User) -> Rating | None:
+async def delete_rate(rate_id: int, db: Session, user: User) -> None:
     """
     The delete_rate function deletes a rating from the database.
         Args:
@@ -53,7 +53,7 @@ async def delete_rate(rate_id: int, db: Session, user: User) -> Rating | None:
     if rate:
         db.delete(rate)
         db.commit()
-    return rate
+    return None
 
 
 async def calculate_rating(image_id: int, db: Session, user: User) -> float | None:
