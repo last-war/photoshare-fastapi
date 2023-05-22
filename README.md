@@ -13,7 +13,7 @@ Command project from python web 9 stream GoIT
 ## How to install?
 * clone repository [https://github.com/last-war/photoshare-fastapi](repository)
 * you need environment variables:
-DATABASE_URL=postgresql://postgres:secret@{your_DBadress}:{your_DBport}/{DB_name}
+DATABASE_URL=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DOMAIN}:${POSTGRES_PORT}/${POSTGRES_DB}
 POSTGRES_DB={postgres_db_name}
 POSTGRES_USER={postgres_user}
 POSTGRES_PASSWORD={secret_db_key}
