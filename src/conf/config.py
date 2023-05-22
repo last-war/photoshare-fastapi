@@ -2,7 +2,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = 'samlpe'
+    sqlalchemy_database_url: str = 'postgresql+psycopg2://user:password@server:5432/database'
     secret_key: str = 'secret'
     algorithm: str = 'HS256'
     cloudinary_name: str = 'name'
