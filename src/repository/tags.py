@@ -9,10 +9,13 @@ from sqlalchemy.orm import Session
 
 def parse_tags(tags_string: str) -> list[str]:
     """
-    parse a list of tags
+    parse a list of tags, find # and separated by spaces
 
-    :param tags_string: str: string to parse
-    :return: list of tags
+    Arguments:
+        tags_string (str): string to parse
+
+    Returns:
+        list[str]: list of tags
     """
     result = []
     if not tags_string:
@@ -26,15 +29,17 @@ def parse_tags(tags_string: str) -> list[str]:
     return result
 
 
-async def create_tags(tags_string, db: Session) -> List[Tag]:
+async def create_tags(tags_string: str, db: Session) -> List[Tag]:
     """
     Create a new tags in database just if not exist
     limit 5 tags
 
-    :param tags_string: str: string to parse
-    :param db: Session: current session to db
-    :return: List[Tag]
+    Arguments:
+        tags_string (str): string to create tags after parsing
+        db (Session): SQLAlchemy session object for accessing the database
 
+    Returns:
+        List[Tag]: list with tags objects
     """
     result = []
     rw_tags = parse_tags(tags_string)
@@ -58,13 +63,14 @@ async def edit_tag(tag: Tag, body: TagModel, db: Session) -> Tag | None:
     passed in as part of the body. The function then commits those changes to our database and refreshes
     the object so that it reflects any changes made by other users.
 
-    Args:
-    tag: Tag: Pass the tag object to the function
-    body: TagModel: Pass in the new tag name
-    db: Session: Access the database
+    Arguments:
+        tag (Tag): Pass the tag object to the function
+        body (TagModel): request body containing information about tag for editing
+        db (Session): SQLAlchemy session object for accessing the database
 
     Returns:
-    A tag or none
+        Tag | None: tag object after editing
+        or None if the user have no permission to edite the tag or if no matching tag exists in the database
     """
     tag.tag_name = body.tag_name
     db.commit()
@@ -76,9 +82,13 @@ async def find_tag(tag_name: str, db: Session) -> Tag | None:
     """
     get tag from database by name
 
-    :param tag_name: str: name to find
-    :param db: Session: current session to db
-    :return: tag object
+    Arguments:
+        tag_name (str): name of tag to find
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Tag | None: tag object
+        or None if no matching tag exists in the database
     """
     tag = db.query(Tag).filter(Tag.tag_name == tag_name).first()
     return tag
@@ -104,9 +114,13 @@ async def delete_tag(tag_name: str, db: Session) -> Tag | None:
     """
     Delete tag from database just for Administrator role
 
-    :param tag_name: str: name to find tag
-    :param db: Session: current session to db
-    :return: The deleted tag if found in database
+    Arguments:
+        tag_name (str): name of tag to find
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Tag | None: tag object
+        or None if the user have no permission to delete the tag or if no matching tag exists in the database
     """
     tag = await find_tag(tag_name, db)
     if tag:
@@ -115,16 +129,20 @@ async def delete_tag(tag_name: str, db: Session) -> Tag | None:
     return tag
 
 
-async def get_images_by_tag(tag: str, limit: int, offset: int, db: Session):
+async def get_images_by_tag(tag: str, limit: int, offset: int, db: Session) -> List[Image] | None:
     """
     The get_images function returns a list of images for the specified user.
         The limit and offset parameters are used to paginate the results.
 
-    :param tag: str: tag to filter the images
-    :param limit: int: Limit the number of images returned
-    :param offset: int: Specify the offset of the images to be retrieved
-    :param db: Session: Pass the database session to the function
-    :return: A list of image objects
+    Arguments:
+        tag (str): name of tag to find images
+        offset (int): number of comments to skip in the search
+        limit (int): maximum number of comments to retrieve
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Image] | None: a list of Image objects with tags,
+        or None if no matching tags were found
     """
     images = db.query(Image).join(tag_to_image).join(Tag).filter(and_(Tag.tag_name == tag, Image.is_deleted == False))\
         .order_by(desc(Image.created_at)).limit(limit).offset(offset).all()

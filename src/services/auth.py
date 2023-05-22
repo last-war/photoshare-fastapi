@@ -24,14 +24,23 @@ class Auth:
     )
 
     @classmethod
-    def token_decode(cls, token):
+    def token_decode(cls, token: str) -> dict:
+        """
+            Try to decode the token
+
+        Arguments:
+            token (str): token to take decoded
+
+        Returns:
+            dict with results of decoded token
+        """
         try:
             return jwt.decode(token, cls.SECRET_KEY, algorithms=[cls.ALGORITHM])
         except JWTError:
             raise cls.credentials_exception
 
     @classmethod
-    async def create_access_token(cls, data: dict, expires_delta: Optional[float] = None):
+    async def create_access_token(cls, data: dict, expires_delta: Optional[float] = None) -> dict:
         """
         The create_access_token function creates a new access token for the user.
             The function takes in two arguments: data and expires_delta.
@@ -40,11 +49,12 @@ class Auth:
             Expires_delta is an optional argument that specifies how long you want your access token to be valid
             for (in seconds). If no value is specified then it defaults to 48 hours.
 
-        :param cls: Represent the instance of the class
-        :param data: dict: Pass the data to be encoded
-        :param expires_delta: Optional[float]: Set the expiration time for a token
-        :return: A token that is encoded with the data, current time, expiry time and scope
-        :doc-author: Trelent
+        Arguments:
+            data (dict): A dictionary containing the user's id and username.
+            expires_delta (Optional[float]): The number of seconds until the token expires, defaults to None.
+
+        Returns:
+            A token that is encoded with the data, current time, expiry time and scope
         """
         to_encode = data.copy()
         if expires_delta:
@@ -59,15 +69,13 @@ class Auth:
     async def create_refresh_token(cls, data: dict, expires_delta: Optional[float] = None):
         """
         The create_refresh_token function creates a refresh token for the user.
-            Args:
-                data (dict): A dictionary containing the user's id and username.
-                expires_delta (Optional[float]): The number of seconds until the token expires, defaults to None.
 
-        :param cls: Represent the instance of the class
-        :param data: dict: Pass the data that will be encoded in the token
-        :param expires_delta: Optional[float]: Set the expiration time of the refresh token
-        :return: An encoded refresh token
-        :doc-author: Trelent
+        Arguments:
+            data (dict): A dictionary containing the user's id and username.
+            expires_delta (Optional[float]): Set the expiration time of the refresh token
+
+        Returns:
+            An encoded refresh token
         """
         to_encode = data.copy()
         if expires_delta:
@@ -85,11 +93,12 @@ class Auth:
             protected endpoints. It takes a token as an argument and returns the user
             if it's valid, or raises an exception otherwise.
 
-        :param cls: Access the class attributes
-        :param token: str: Get the token from the request header
-        :param db: Session: Get the database session
-        :return: A user object if the token is valid
-        :doc-author: Trelent
+        Arguments:
+            token (str): Get the token from the request header
+            db (Session): SQLAlchemy session object for accessing the database
+
+        Returns:
+            A user object if the token is valid
         """
 
         payload = cls.token_decode(token)
@@ -115,11 +124,11 @@ class Auth:
         If not, it raises an HTTPException with status code 401 (UNAUTHORIZED)
         and detail 'Could not validate credentials'.
 
+        Arguments:
+            refresh_token (str): Pass the refresh token to the function
 
-        :param cls: Represent the instance of the class
-        :param refresh_token: str: Pass the refresh token to the function
-        :return: The email of the user that is associated with the refresh token
-        :doc-author: Trelent
+        Returns:
+            The email of the user that is associated with the refresh token
         """
         payload = cls.token_decode(refresh_token)
         if payload['scope'] == 'refresh_token':
@@ -134,10 +143,11 @@ class Auth:
         The token is encoded with the SECRET_KEY, which is stored in the .env file.
         The algorithm used to encode the token is also stored in the .env file.
 
-        :param cls: Represent the instance of the class
-        :param data: dict: Pass in the data that will be encoded into the token
-        :return: A token that is encoded with the user's email and a secret key
-        :doc-author: Trelent
+        Arguments:
+            data (dict): Pass in the data that will be encoded into the token
+
+        Returns:
+            A token that is encoded with the user's email and a secret key
         """
         to_encode = data.copy()
         expire = datetime.utcnow() + timedelta(hours=1)
@@ -157,10 +167,12 @@ class Auth:
         and detail message &quot;Invalid scope for token&quot;.
         If there is any other error in decoding or validating the JWT, we raise another
         HTTPException with status code 422
-        :param cls: Represent the instance of the class
-        :param token: str: Pass in the token that is sent to the user's email
-        :return: The email address associated with the token
-        :doc-author: Trelent
+
+        Arguments:
+            token (str): Pass in the token that is sent to the user's email
+
+        Returns:
+            The email address associated with the token
         """
         payload = cls.token_decode(token)
         if payload['scope'] == 'email_token':

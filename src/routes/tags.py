@@ -22,11 +22,14 @@ allowed_operation_delete = RoleAccess([UserRole.Admin])
              status_code=status.HTTP_201_CREATED)
 async def create_tags(tags_string: str, db: Session = Depends(get_db)):
     """
-    create new tag from tag_name
+    create new tag from string find # and separated by spaces
 
-    :param tags_string: str: string to parse
-    :param db: Session: current session to db
-    :return: tag object
+    Arguments:
+        tags_string (str): string to parse
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Tag]: new tags list
     """
     tag = await repository_tag.create_tags(tags_string, db)
     return tag
@@ -37,11 +40,14 @@ async def get_images_by_tag(tag_name: str, limit: int = 10, offset: int = 0, db:
     """
     route to get images by tag name
 
-    :param tag_name: str: tag name to found
-    :param limit: int: Limit the number of images returned
-    :param offset: int: Specify the number of records to skip before returning results
-    :param db: Session: current session to db
-    :return: tag object
+    Arguments:
+        offset (int): number of tags to skip in the search
+        limit (int): maximum number of tags to retrieve
+        tag_name (str): tag name to found
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        List[Image] | None: a list of Image or None if no matching tag were found
     """
     tag = await repository_tag.get_images_by_tag(tag_name, limit, offset, db)
     if tag is None:
@@ -54,9 +60,12 @@ async def get_one(tag_name: str, db: Session = Depends(get_db)):
     """
     route to get tag object by tag name
 
-    :param tag_name: str: tag name to found
-    :param db: Session: current session to db
-    :return: tag object
+    Arguments:
+        tag_name (str): tag name to found
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        Tag | None: Tag or None if no matching tag were found
     """
     tag = await repository_tag.find_tag(tag_name, db)
     if tag is None:
@@ -66,19 +75,17 @@ async def get_one(tag_name: str, db: Session = Depends(get_db)):
 
 @router.put("/{tag_id}", response_model=TagResponse, dependencies=[Depends(allowed_operation_put)])
 async def update_tag(body: TagModel, tag_id: int = Path(ge=1), db: Session = Depends(get_db)):
-
     """
     The update_tag function updates a tag in the database.
         The function takes an id and a body as input, and returns the updated tag.
         If no tag is found with that id, it raises an HTTP 404 error.
-
-    Args:
-        body: TagModel: Get the data from the request body
-        tag_id: int: Find the tag to be deleted
-        db: Session: Get a database session
+    Arguments:
+        body (TagModel): all need field to update
+        tag_id (int): Find the tag to be deleted
+        db (Session): SQLAlchemy session object for accessing the database
 
     Returns:
-        A tagmodel object
+        Tag | None: Tag or None if no matching tag were found
     """
     tag = await repository_tag.find_tag_by_id(tag_id, db)
     if tag is None:
@@ -92,9 +99,12 @@ async def delete(tag_name: str, db: Session = Depends(get_db)):
     """
     route to delete tag finded by name
 
-    :param tag_name: str: tag to found
-    :param db: Session: current session to db
-    :return: tag object
+    Arguments:
+        tag_name (str): tag name to found
+        db (Session): SQLAlchemy session object for accessing the database
+
+    Returns:
+        None
     """
     tag = await repository_tag.delete_tag(tag_name, db)
     if tag is None:

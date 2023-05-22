@@ -26,6 +26,7 @@ async def post_comment(image_id: int,
                        current_user: User = Depends(auth_service.get_current_user)):
     """
     Creates a new comment for an image.
+
     Arguments:
         image_id (int): ID of the image that the comment is being made on
         body (CommentBase): Pass the comment_text from the request body to the function
@@ -33,7 +34,7 @@ async def post_comment(image_id: int,
         current_user (User): the current user attempting to delete the comment
 
     Returns:
-        Comment: the Comment object representing the modified comment
+        Comment: the Comment object
     """
 
     comment = await create_comment(image_id, body, db, current_user)
@@ -77,13 +78,13 @@ async def remove_comment(comment_id: int,
     Deletes the specified comment from the database, if the current user has permission to do so.
     If comment with requested id does not exist raise HTTPException with status HTTP_404_NOT_FOUND
 
-        Arguments:
-            comment_id (int): ID of the comment to be deleted
-            db (Session): SQLAlchemy session object for accessing the database
-            current_user (User): the current user attempting to delete the comment
+    Arguments:
+        comment_id (int): ID of the comment to be deleted
+        db (Session): SQLAlchemy session object for accessing the database
+        current_user (User): the current user attempting to delete the comment
 
-        Returns:
-            None: If comment was success delete
+    Returns:
+        None: If comment was success delete
         """
 
     deleted_comment = await delete_comment(comment_id, db, current_user)
@@ -136,6 +137,5 @@ async def show_comments(image_id: int,
         List[Comment] | None: a list of Comment objects representing all comments,
         or None if no matching comments were found
     """
-
     comments = await get_comments_by_image_id(skip, limit, image_id, db)
     return comments
