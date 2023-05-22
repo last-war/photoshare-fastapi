@@ -11,7 +11,7 @@ Command project from python web 9 stream GoIT
 # Instruction
   
 ## How to install?
-* clone repository [https://github.com/last-war/photoshare-fastapi](repository)
+* clone repository [repository](https://github.com/last-war/photoshare-fastapi)
 * you need environment variables: exapmle in scr/conf/config.py
 * simple way just run main.py: uvicorn.run(app, host="127.0.0.1", port=8000)
  
@@ -32,7 +32,7 @@ Command project from python web 9 stream GoIT
 * Search photos by tags.
 * Rate posts.
 * Admin and Moderator functions
-* To see other capabilites, check [./docs/_build/html/index.html](link).
+* To see other capabilites, check [our docs file](/docs/_build/html/index.html)
 
 ## Our Team:
 Developer: [Olga Pasichnyuk](https://github.com/olgapasichnyuk)  
