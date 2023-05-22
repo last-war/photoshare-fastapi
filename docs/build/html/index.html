@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Welcome to PhotoShare Rest API’s documentation! &#8212; PhotoShare Rest API 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PhotoShare Rest API 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to PhotoShare Rest API’s documentation!</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="welcome-to-photoshare-rest-api-s-documentation">
+<h1>Welcome to PhotoShare Rest API’s documentation!<a class="headerlink" href="#welcome-to-photoshare-rest-api-s-documentation" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="photoshare-rest-api-main">
+<h1>PhotoShare REST API main<a class="headerlink" href="#photoshare-rest-api-main" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="module-src.repository.images">
+<span id="photoshare-rest-api-repository-images"></span><h1>PhotoShare REST API repository Images<a class="headerlink" href="#module-src.repository.images" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.change_description">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">change_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.change_description" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The change_description function takes in a body, image_id, user and db.</dt><dd><p>The function then gets the image from the id provided by the user.
+If there is an image it changes its description to what was provided in the body.</p>
+</dd>
+<dt>Args:</dt><dd><p>body (ImageModel): The ImageModel object to be created.
+image_id(int): The id of the desired Image object.
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image: The image object with the updated description</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.create">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span></span></span><a class="headerlink" href="#src.repository.images.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>The create function creates a new image in the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>body (ImageModel): The ImageModel object to be created.
+image_url(str): Pass the image url to the database
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image: The image object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.get_image">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">get_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.get_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>The get_image function takes in an image_id, a user object and a database session.
+It then queries the database for an image with the given id that belongs to the given user.
+If such an image exists, it is returned.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>image_id (int): Specify the image id of the image that we want to get
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image | None: Image objects or None if no matching image were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.get_image_from_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">get_image_from_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.get_image_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The get_image_from_id function takes in an image_id and a user, and returns the image with that id.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image_id (int): The id of the desired Image object.
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image | None: An image from the database based on an id and a user or None if no matching image were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.get_image_from_url">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">get_image_from_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.get_image_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The get_image_from_url function takes in an image_url and a user object, and returns the Image object</dt><dd><p>associated with that url. If no such image exists, it returns None.</p>
+</dd>
+<dt>Args:</dt><dd><p>image_url(str): Pass the image url to the database
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image | None: The image with the given url and user or None if no matching image were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.get_images">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">get_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Image</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.get_images" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The get_images function returns a list of images for the specified user.</dt><dd><p>The limit and offset parameters are used to paginate the results.</p>
+</dd>
+<dt>Arguments:</dt><dd><p>limit (int): maximum number to retrieve
+offset (int): number of object to skip in the search
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Image] | None: A list of image objects or None if no matching images were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.images.remove">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.images.</span></span><span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Image</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.images.remove" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The remove function is used to delete an image from the database.</dt><dd><p>It takes in a user and an image_id, and returns the deleted image if it exists.</p>
+</dd>
+<dt>Args:</dt><dd><p>image_id (int): The id of the desired Image object.
+user (User): the current user
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Image | None: the Image object representing the deleted image,
+or None if the user have no permission to delete the image or if no matching image exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.repository.ratings">
+<span id="photoshare-rest-api-repository-ratings"></span><h1>PhotoShare REST API repository Ratings<a class="headerlink" href="#module-src.repository.ratings" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.ratings.calculate_rating">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.ratings.</span></span><span class="sig-name descname"><span class="pre">calculate_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.ratings.calculate_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>The calculate_rating function calculate an average rating of the image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image_id (int): The id of the image for calculating rating.
+db (Session): A connection to the database.
+user (User): The User object which calculates the rating.</p>
+</dd>
+<dt>Returns:</dt><dd><p>float: The average rating of the image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.ratings.create_rate">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.ratings.</span></span><span class="sig-name descname"><span class="pre">create_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Rating</span></span></span><a class="headerlink" href="#src.repository.ratings.create_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The create_rate function creates a new rate for the image with the given id.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>image_id (int): The id of the image to be rated.
+rate (int): The rating value.
+db (Session): SQLAlchemy session object for accessing the database
+user (User): The User object that is creating the rate.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Comment: the Rating object representing the new rating.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.ratings.delete_rate">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.ratings.</span></span><span class="sig-name descname"><span class="pre">delete_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.ratings.delete_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delete_rate function deletes a rating from the database.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>rate_id (int): The id of the rating to be deleted.
+db (Session): A connection to the database.
+user (User): The User object that is removes the rate.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.ratings.show_images_by_rating">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.ratings.</span></span><span class="sig-name descname"><span class="pre">show_images_by_rating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_decrease</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Image</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></span><a class="headerlink" href="#src.repository.ratings.show_images_by_rating" title="Permalink to this definition">¶</a></dt>
+<dd><p>The show_images_by_rating function show all images in db, sorted by rating.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>to_decrease (bool): The boolean value, that indicates the direction of sorting.
+db (Session): A connection to the database.
+user (User): The User object which asks for a list of sorted images</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Image] | None: a list of Image objects sorted by rating
+or list if no matching rate</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.repository.comments">
+<span id="photoshare-rest-api-repository-comments"></span><h1>PhotoShare REST API repository Comments<a class="headerlink" href="#module-src.repository.comments" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.create_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">create_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CommentBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Comment</span></span></span><a class="headerlink" href="#src.repository.comments.create_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new comment in the database.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>image_id (int): ID of the image that the comment is being made on
+body (CommentBase): Pass the comment_text from the request body to the function
+db (Session): SQLAlchemy session object for accessing the database
+user (User): the current user attempting to delete the comment</p>
+</dd>
+<dt>Returns:</dt><dd><p>Comment: the Comment object representing the new comment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.delete_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">delete_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Comment</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.comments.delete_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the specified comment from the database, if the current user has permission to do so.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>comment_id (int): ID of the comment to be deleted
+db (Session): SQLAlchemy session object for accessing the database
+user (User): the current user attempting to delete the comment</p>
+</dd>
+<dt>Returns:</dt><dd><p>Comment | None: the Comment object representing the deleted comment,
+or None if the user have no permission to delete the comment or if no matching comment exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.edit_comment">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">edit_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CommentBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Comment</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.comments.edit_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifies the specified comment in the database, if the current user has permission to do so.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>comment_id (int): ID of the comment to be deleted
+db (Session): SQLAlchemy session object for accessing the database
+body (CommentBase): Pass the comment_text from the request body to the function
+user (User): the current user attempting to edite the comment</p>
+</dd>
+<dt>Returns:</dt><dd><p>Comment | None: the Comment object representing the modified comment,
+or None if the user have no permission to edite the comment or if no matching comment exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.get_all_user_comments">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">get_all_user_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Comment</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.comments.get_all_user_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all comments from the specified user from the database.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>skip (int): number of comments to skip in the search
+limit (int): maximum number of comments to retrieve
+user_id (int): ID of the user to retrieve comments for
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Comment] | None: a list of Comment objects representing the user’s comments,
+or None if no matching comments were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.get_comments_by_image_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">get_comments_by_image_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Comment</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.comments.get_comments_by_image_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all comments of the specified image from the database.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>skip (int): number of comments to skip in the search
+limit (int): maximum number of comments to retrieve
+image_id (int): ID of the image to retrieve comments for
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Comment] | None: a list of Comment objects representing all comments,
+or None if no matching comments were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.repository.tags">
+<span id="photoshare-rest-api-repository-tags"></span><h1>PhotoShare REST API repository Tags<a class="headerlink" href="#module-src.repository.tags" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.create_tags">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">create_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#src.repository.tags.create_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new tags in database just if not exist
+limit 5 tags</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tags_string (str): string to create tags after parsing
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Tag]: list with tags objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.delete_tag">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">delete_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.tags.delete_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete tag from database just for Administrator role</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tag_name (str): name of tag to find
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tag | None: tag object
+or None if the user have no permission to delete the tag or if no matching tag exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.edit_tag">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">edit_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TagModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.tags.edit_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>The edit_tag function takes in a tag object, the body of the request (which is a TagModel), and
+the database session. It then sets the tag_name attribute of that tag to be equal to whatever was
+passed in as part of the body. The function then commits those changes to our database and refreshes
+the object so that it reflects any changes made by other users.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tag (Tag): Pass the tag object to the function
+body (TagModel): request body containing information about tag for editing
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tag | None: tag object after editing
+or None if the user have no permission to edite the tag or if no matching tag exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.find_tag">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">find_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.tags.find_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>get tag from database by name</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tag_name (str): name of tag to find
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tag | None: tag object
+or None if no matching tag exists in the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.find_tag_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">find_tag_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.tags.find_tag_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The find_tag_by_id function takes in a tag_id and db Session object,
+and returns the Tag object with that id. If no such tag exists, it returns None.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tag_id: int: Find the tag in the database
+db: Session: Pass the database session to the function</p>
+</dd>
+<dt>Returns:</dt><dd><p>A tag object or none</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.get_images_by_tag">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">get_images_by_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Image</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.tags.get_images_by_tag" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The get_images function returns a list of images for the specified user.</dt><dd><p>The limit and offset parameters are used to paginate the results.</p>
+</dd>
+<dt>Arguments:</dt><dd><p>tag (str): name of tag to find images
+offset (int): number of comments to skip in the search
+limit (int): maximum number of comments to retrieve
+db (Session): SQLAlchemy session object for accessing the database</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Image] | None: a list of Image objects with tags,
+or None if no matching tags were found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.repository.tags.parse_tags">
+<span class="sig-prename descclassname"><span class="pre">src.repository.tags.</span></span><span class="sig-name descname"><span class="pre">parse_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#src.repository.tags.parse_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse a list of tags, find # and separated by spaces</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tags_string (str): string to parse</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[str]: list of tags</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="photoshare-rest-api-repository-users">
+<h1>PhotoShare REST API repository Users<a class="headerlink" href="#photoshare-rest-api-repository-users" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-comments">
+<h1>PhotoShare REST API routes Comments<a class="headerlink" href="#photoshare-rest-api-routes-comments" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-auth">
+<h1>PhotoShare REST API routes Auth<a class="headerlink" href="#photoshare-rest-api-routes-auth" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-images">
+<h1>PhotoShare REST API routes Images<a class="headerlink" href="#photoshare-rest-api-routes-images" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-ratings">
+<h1>PhotoShare REST API routes Ratings<a class="headerlink" href="#photoshare-rest-api-routes-ratings" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-tags">
+<h1>PhotoShare REST API routes Tags<a class="headerlink" href="#photoshare-rest-api-routes-tags" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="photoshare-rest-api-routes-users">
+<h1>PhotoShare REST API routes Users<a class="headerlink" href="#photoshare-rest-api-routes-users" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="module-src.services.tags">
+<span id="photoshare-rest-api-service-tags"></span><h1>PhotoShare REST API service Tags<a class="headerlink" href="#module-src.services.tags" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.services.tags.create_transformation_tags">
+<span class="sig-prename descclassname"><span class="pre">src.services.tags.</span></span><span class="sig-name descname"><span class="pre">create_transformation_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.tags.create_transformation_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>create tag for transformation operations</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>tags (List[Tag]): list tag objects for write tag strings</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[Tag]: tag strings for new image</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="photoshare-rest-api-service-auth">
+<h1>PhotoShare REST API service Auth<a class="headerlink" href="#photoshare-rest-api-service-auth" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="module-src.services.cloud_image">
+<span id="photoshare-rest-api-service-cloudimage"></span><h1>PhotoShare REST API service CloudImage<a class="headerlink" href="#module-src.services.cloud_image" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Cartoonify">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Cartoonify</span></span><a class="headerlink" href="#src.services.cloud_image.Cartoonify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Cartoonify.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cartoonify'</span></em><a class="headerlink" href="#src.services.cloud_image.Cartoonify.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Cartoonify.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'cartoonify',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500}</span></em><a class="headerlink" href="#src.services.cloud_image.Cartoonify.transformation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">CloudImage</span></span><a class="headerlink" href="#src.services.cloud_image.CloudImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.create_qr_code_image">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_qr_code_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.create_qr_code_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>The create_qr_code_image function takes a URL and returns an image of the QR code for that URL.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>url (str): Pass the url to be encoded into a qr code</p>
+</dd>
+<dt>Returns:</dt><dd><p>A bytesio object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.generate_name_avatar">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_name_avatar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.generate_name_avatar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The generate_name_avatar function takes an email address as input and returns a unique avatar name.
+The function uses the first 12 characters of the SHA256 hash of the email address to generate a unique string.
+This string is then appended with &amp;quot;web9/&amp;quot; to create a valid S3 bucket key.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>email (str): Specify the type of parameter that is expected to be passed into the function</p>
+</dd>
+<dt>Returns:</dt><dd><p>A string that is a combination of the prefix &amp;quot;web9/&amp;quot; and a 12-character hash of the email address</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.generate_name_image">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_name_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.generate_name_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>The generate_name_image function generates a unique name for the image file.
+It uses the uuid4 function to generate a random UUID, and then hashes it using SHA256.
+The resulting hash is converted to hexadecimal format, and returned as a string.</p>
+<p>Arguments:</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A string of the form &amp;quot;photoshare/&amp;lt;sha256 hash&amp;gt;&amp;quot;</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.get_transformation_image">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_transformation_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.get_transformation_image" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The get_transformation_image function takes in a public_id and transformation string,</dt><dd><p>then returns the url of the transformed image. If no transformation is found, it returns None.</p>
+</dd>
+<dt>Arguments:</dt><dd><p>public_id (str): Get the public id of the image
+transformation (str): Get the transformation name from the transformation class</p>
+</dd>
+<dt>Returns:</dt><dd><p>The url of the transformed image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.get_url_for_avatar">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_url_for_avatar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">public_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.get_url_for_avatar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The get_url_for_avatar function takes in a public_id and an r
+(which is the result of a cloudinary.api.resource call)
+and returns the URL for that avatar image, which will be used to display it on the page.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>public_id (str): Identify the image in cloudinary
+r: Get the version of the image</p>
+</dd>
+<dt>Returns:</dt><dd><p>A url of avatar</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.get_url_for_image">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_url_for_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.get_url_for_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>The get_url_for_image function takes a file name as an argument and returns the url for that image.
+The function uses the cloudinary library to generate a url from the file name.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>file_name (str): Specify the name of the file that is to be uploaded</p>
+</dd>
+<dt>Returns:</dt><dd><p>The url for the image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.cloud_image.CloudImage.upload">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloud_image.CloudImage.upload" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The upload function takes a file and uploads it to the cloudinary server.</dt><dd><p>The public_id is the name of the file on cloudinary, and overwrite=True means that if there is already
+a file with that name, it will be overwritten.</p>
+</dd>
+<dt>Arguments:</dt><dd><p>file (bite): Specify the file to be uploaded
+public_id (str): Specify the public id of the image
+overwrite (bool): Determine whether the image should be overwritten if it already exists</p>
+</dd>
+<dt>Returns:</dt><dd><p>A dictionary with the following keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Grayscale">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Grayscale</span></span><a class="headerlink" href="#src.services.cloud_image.Grayscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Grayscale.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grayscale'</span></em><a class="headerlink" href="#src.services.cloud_image.Grayscale.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Grayscale.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'grayscale',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500}</span></em><a class="headerlink" href="#src.services.cloud_image.Grayscale.transformation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Radius">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Radius</span></span><a class="headerlink" href="#src.services.cloud_image.Radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Radius.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radius'</span></em><a class="headerlink" href="#src.services.cloud_image.Radius.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Radius.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'radius':</span> <span class="pre">'max',</span> <span class="pre">'width':</span> <span class="pre">500}</span></em><a class="headerlink" href="#src.services.cloud_image.Radius.transformation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Standard">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Standard</span></span><a class="headerlink" href="#src.services.cloud_image.Standard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Standard.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'standard'</span></em><a class="headerlink" href="#src.services.cloud_image.Standard.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Standard.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500}</span></em><a class="headerlink" href="#src.services.cloud_image.Standard.transformation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Transformation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Transformation</span></span><a class="headerlink" href="#src.services.cloud_image.Transformation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Transformation images cloudinary.
+grayscale
+cartoonify
+radius
+standard
+vectorize</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Transformation.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cartoonify':</span> <span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'cartoonify',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500},</span> <span class="pre">'grayscale':</span> <span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'grayscale',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500},</span> <span class="pre">'radius':</span> <span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'radius':</span> <span class="pre">'max',</span> <span class="pre">'width':</span> <span class="pre">500},</span> <span class="pre">'standard':</span> <span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500},</span> <span class="pre">'vectorize':</span> <span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'vectorize:colors:2:detail:0.05',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500}}</span></em><a class="headerlink" href="#src.services.cloud_image.Transformation.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.services.cloud_image.Vectorize">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloud_image.</span></span><span class="sig-name descname"><span class="pre">Vectorize</span></span><a class="headerlink" href="#src.services.cloud_image.Vectorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Vectorize.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vectorize'</span></em><a class="headerlink" href="#src.services.cloud_image.Vectorize.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.services.cloud_image.Vectorize.transformation">
+<span class="sig-name descname"><span class="pre">transformation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'crop':</span> <span class="pre">'fill',</span> <span class="pre">'effect':</span> <span class="pre">'vectorize:colors:2:detail:0.05',</span> <span class="pre">'gravity':</span> <span class="pre">'faces',</span> <span class="pre">'height':</span> <span class="pre">500,</span> <span class="pre">'width':</span> <span class="pre">500}</span></em><a class="headerlink" href="#src.services.cloud_image.Vectorize.transformation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="photoshare-rest-api-service-roles">
+<h1>PhotoShare REST API service Roles<a class="headerlink" href="#photoshare-rest-api-service-roles" title="Permalink to this heading">¶</a></h1>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Welcome to PhotoShare Rest API’s documentation!</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-main">PhotoShare REST API main</a></li>
+<li><a class="reference internal" href="#module-src.repository.images">PhotoShare REST API repository Images</a><ul>
+<li><a class="reference internal" href="#src.repository.images.change_description"><code class="docutils literal notranslate"><span class="pre">change_description()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.create"><code class="docutils literal notranslate"><span class="pre">create()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.get_image"><code class="docutils literal notranslate"><span class="pre">get_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.get_image_from_id"><code class="docutils literal notranslate"><span class="pre">get_image_from_id()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.get_image_from_url"><code class="docutils literal notranslate"><span class="pre">get_image_from_url()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.get_images"><code class="docutils literal notranslate"><span class="pre">get_images()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.images.remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-src.repository.ratings">PhotoShare REST API repository Ratings</a><ul>
+<li><a class="reference internal" href="#src.repository.ratings.calculate_rating"><code class="docutils literal notranslate"><span class="pre">calculate_rating()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.ratings.create_rate"><code class="docutils literal notranslate"><span class="pre">create_rate()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.ratings.delete_rate"><code class="docutils literal notranslate"><span class="pre">delete_rate()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.ratings.show_images_by_rating"><code class="docutils literal notranslate"><span class="pre">show_images_by_rating()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-src.repository.comments">PhotoShare REST API repository Comments</a><ul>
+<li><a class="reference internal" href="#src.repository.comments.create_comment"><code class="docutils literal notranslate"><span class="pre">create_comment()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.comments.delete_comment"><code class="docutils literal notranslate"><span class="pre">delete_comment()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.comments.edit_comment"><code class="docutils literal notranslate"><span class="pre">edit_comment()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.comments.get_all_user_comments"><code class="docutils literal notranslate"><span class="pre">get_all_user_comments()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.comments.get_comments_by_image_id"><code class="docutils literal notranslate"><span class="pre">get_comments_by_image_id()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-src.repository.tags">PhotoShare REST API repository Tags</a><ul>
+<li><a class="reference internal" href="#src.repository.tags.create_tags"><code class="docutils literal notranslate"><span class="pre">create_tags()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.delete_tag"><code class="docutils literal notranslate"><span class="pre">delete_tag()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.edit_tag"><code class="docutils literal notranslate"><span class="pre">edit_tag()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.find_tag"><code class="docutils literal notranslate"><span class="pre">find_tag()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.find_tag_by_id"><code class="docutils literal notranslate"><span class="pre">find_tag_by_id()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.get_images_by_tag"><code class="docutils literal notranslate"><span class="pre">get_images_by_tag()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.tags.parse_tags"><code class="docutils literal notranslate"><span class="pre">parse_tags()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#photoshare-rest-api-repository-users">PhotoShare REST API repository Users</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-comments">PhotoShare REST API routes Comments</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-auth">PhotoShare REST API routes Auth</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-images">PhotoShare REST API routes Images</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-ratings">PhotoShare REST API routes Ratings</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-tags">PhotoShare REST API routes Tags</a></li>
+<li><a class="reference internal" href="#photoshare-rest-api-routes-users">PhotoShare REST API routes Users</a></li>
+<li><a class="reference internal" href="#module-src.services.tags">PhotoShare REST API service Tags</a><ul>
+<li><a class="reference internal" href="#src.services.tags.create_transformation_tags"><code class="docutils literal notranslate"><span class="pre">create_transformation_tags()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#photoshare-rest-api-service-auth">PhotoShare REST API service Auth</a></li>
+<li><a class="reference internal" href="#module-src.services.cloud_image">PhotoShare REST API service CloudImage</a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Cartoonify"><code class="docutils literal notranslate"><span class="pre">Cartoonify</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Cartoonify.name"><code class="docutils literal notranslate"><span class="pre">Cartoonify.name</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.Cartoonify.transformation"><code class="docutils literal notranslate"><span class="pre">Cartoonify.transformation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage"><code class="docutils literal notranslate"><span class="pre">CloudImage</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.create_qr_code_image"><code class="docutils literal notranslate"><span class="pre">CloudImage.create_qr_code_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.generate_name_avatar"><code class="docutils literal notranslate"><span class="pre">CloudImage.generate_name_avatar()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.generate_name_image"><code class="docutils literal notranslate"><span class="pre">CloudImage.generate_name_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.get_transformation_image"><code class="docutils literal notranslate"><span class="pre">CloudImage.get_transformation_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.get_url_for_avatar"><code class="docutils literal notranslate"><span class="pre">CloudImage.get_url_for_avatar()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.get_url_for_image"><code class="docutils literal notranslate"><span class="pre">CloudImage.get_url_for_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.CloudImage.upload"><code class="docutils literal notranslate"><span class="pre">CloudImage.upload()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.Grayscale"><code class="docutils literal notranslate"><span class="pre">Grayscale</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Grayscale.name"><code class="docutils literal notranslate"><span class="pre">Grayscale.name</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.Grayscale.transformation"><code class="docutils literal notranslate"><span class="pre">Grayscale.transformation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.Radius"><code class="docutils literal notranslate"><span class="pre">Radius</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Radius.name"><code class="docutils literal notranslate"><span class="pre">Radius.name</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.Radius.transformation"><code class="docutils literal notranslate"><span class="pre">Radius.transformation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.Standard"><code class="docutils literal notranslate"><span class="pre">Standard</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Standard.name"><code class="docutils literal notranslate"><span class="pre">Standard.name</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.Standard.transformation"><code class="docutils literal notranslate"><span class="pre">Standard.transformation</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.Transformation"><code class="docutils literal notranslate"><span class="pre">Transformation</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Transformation.name"><code class="docutils literal notranslate"><span class="pre">Transformation.name</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#src.services.cloud_image.Vectorize"><code class="docutils literal notranslate"><span class="pre">Vectorize</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloud_image.Vectorize.name"><code class="docutils literal notranslate"><span class="pre">Vectorize.name</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloud_image.Vectorize.transformation"><code class="docutils literal notranslate"><span class="pre">Vectorize.transformation</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#photoshare-rest-api-service-roles">PhotoShare REST API service Roles</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">PhotoShare Rest API 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Welcome to PhotoShare Rest API’s documentation!</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, command 6 Web9 GoIT.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
+</html>
