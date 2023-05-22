@@ -69,12 +69,12 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/doctrees/
-docs/_build/_static/
-docs/_build/_templates/
-docs/_build/conf.py
-docs/_build/makefile
-docs/_build/make
+docs/build/doctrees/
+docs/_static/
+docs/_templates/
+docs/conf.py
+docs/makefile
+docs/make.bat
 
 # PyBuilder
 .pybuilder/
@@ -324,3 +324,4 @@ cython_debug/
 
 test.db
 tests/test.db
+
