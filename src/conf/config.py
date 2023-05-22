@@ -2,10 +2,12 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_drive: str = 'postgresql+psycopg2:'
+    database_url: str = 'samlpe'
+    #database_drive: str = 'postgresql+psycopg2:/postgres'
     postgres_db: str = 'postgres'
     postgres_user: str = 'postgres'
     postgres_password: str = 'secret'
+    postgres_server: str = 'localhost'
     secret_key: str = 'secret'
     algorithm: str = 'HS256'
     cloudinary_name: str = 'name'
