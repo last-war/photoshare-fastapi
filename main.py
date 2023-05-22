@@ -45,9 +45,3 @@ app.include_router(comments.router, prefix='/api')
 app.include_router(images.router, prefix='/api')
 app.include_router(tags.router, prefix='/api')
 app.include_router(ratings.router, prefix='/api')
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
-
-
