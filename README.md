@@ -11,20 +11,10 @@ Command project from python web 9 stream GoIT
 # Instruction
   
 ## How to install?
-* clone repository [https://github.com/last-war/photoshare-fastapi](repository)
-* you need environment variables:
-DATABASE_URL=postgresql://postgres:secret@{your_DBadress}:{your_DBport}/{DB_name}
-POSTGRES_DB={postgres_db_name}
-POSTGRES_USER={postgres_user}
-POSTGRES_PASSWORD={secret_db_key}
-SECRET_KEY={secret_key_for_hash}
-ALGORITHM=HS256
-CLOUDINARY_NAME={your_cloudinary_name}
-CLOUDINARY_API_KEY={your_cloudinary_api_key}
-CLOUDINARY_API_SECRET={your_cloudinary_api_secret}
-* don't forget do empty DB and execute: "alembic upgrade head" 
+* clone repository [repository](https://github.com/last-war/photoshare-fastapi)
+* you need environment variables: exapmle in scr/conf/config.py
 * simple way just run main.py: uvicorn.run(app, host="127.0.0.1", port=8000)
-* 
+ 
 
 ## How to use?
 ### Authorization
@@ -42,7 +32,7 @@ CLOUDINARY_API_SECRET={your_cloudinary_api_secret}
 * Search photos by tags.
 * Rate posts.
 * Admin and Moderator functions
-* To see other capabilites, check [documentation](link).
+* To see other capabilites, check [our docs file](/docs/_build/html/index.html)
 
 ## Our Team:
 Developer: [Olga Pasichnyuk](https://github.com/olgapasichnyuk)  

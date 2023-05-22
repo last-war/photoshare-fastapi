@@ -56,11 +56,15 @@ async def create_tags(tags_string: str, db: Session) -> List[Tag]:
     return result
 
 
-async def edit_tag(body: TagModel, db: Session) -> Tag | None:
+async def edit_tag(tag: Tag, body: TagModel, db: Session) -> Tag | None:
     """
-    get tag from database by name
+    The edit_tag function takes in a tag object, the body of the request (which is a TagModel), and
+    the database session. It then sets the tag_name attribute of that tag to be equal to whatever was
+    passed in as part of the body. The function then commits those changes to our database and refreshes
+    the object so that it reflects any changes made by other users.
 
     Arguments:
+        tag (Tag): Pass the tag object to the function
         body (TagModel): request body containing information about tag for editing
         db (Session): SQLAlchemy session object for accessing the database
 
@@ -68,7 +72,9 @@ async def edit_tag(body: TagModel, db: Session) -> Tag | None:
         Tag | None: tag object after editing
         or None if the user have no permission to edite the tag or if no matching tag exists in the database
     """
-    tag = db.query(Tag).filter(Tag.tag_name == body.tag_name).first()
+    tag.tag_name = body.tag_name
+    db.commit()
+    db.refresh(tag)
     return tag
 
 
@@ -85,6 +91,22 @@ async def find_tag(tag_name: str, db: Session) -> Tag | None:
         or None if no matching tag exists in the database
     """
     tag = db.query(Tag).filter(Tag.tag_name == tag_name).first()
+    return tag
+
+
+async def find_tag_by_id(tag_id: int, db: Session) -> Tag | None:
+    """
+    The find_tag_by_id function takes in a tag_id and db Session object,
+    and returns the Tag object with that id. If no such tag exists, it returns None.
+
+    Args:
+        tag_id: int: Find the tag in the database
+        db: Session: Pass the database session to the function
+
+    Returns:
+        A tag object or none
+    """
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
     return tag
 
 
