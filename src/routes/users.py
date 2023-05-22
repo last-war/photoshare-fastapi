@@ -11,6 +11,10 @@ from src.services.roles import RoleAccess
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+allowed_operation_get = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole.User])
+allowed_operation_post = RoleAccess([UserRole.Admin, UserRole.Moderator, UserRole.User])
+allowed_operation_put = RoleAccess([UserRole.Admin, UserRole.Moderator])
+allowed_operation_delete = RoleAccess([UserRole.Admin])
 
 @router.get("/me/", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
@@ -71,7 +75,7 @@ async def update_user(
     return user
 
 
-@router.put("/update_user_by_admin", response_model=UserUpdateAdmin, dependencies=[Depends(RoleAccess([UserRole.Admin]))])
+@router.put("/update_user_by_admin", response_model=UserUpdateAdmin, dependencies=[Depends(allowed_operation_put)])
 async def update_user_by_admin(
         body: UserUpdateAdmin,
         user: User = Depends(auth_service.get_current_user),
@@ -94,7 +98,7 @@ async def update_user_by_admin(
     return user
 
 
-@router.put("/change_role", response_model=UserChangeRole, dependencies=[Depends(RoleAccess([UserRole.Admin]))])
+@router.put("/change_role", response_model=UserChangeRole, dependencies=[Depends(allowed_operation_put)])
 async def change_role(body: UserChangeRole,
                       user: User = Depends(auth_service.get_current_user),
                       db: Session = Depends(get_db)):
@@ -116,7 +120,7 @@ async def change_role(body: UserChangeRole,
     return user
 
 
-@router.put("/ban_user", response_model=UserResponse, dependencies=[Depends(RoleAccess([UserRole.Admin]))])
+@router.put("/ban_user", response_model=UserResponse, dependencies=[Depends(allowed_operation_put)])
 async def ban_user(user_id: int, db: Session = Depends(get_db)):
     """
     Take user to ban list

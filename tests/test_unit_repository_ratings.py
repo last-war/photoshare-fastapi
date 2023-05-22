@@ -60,7 +60,6 @@ class TestRatings(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_rate(self):
         # test if it is possible to rate an image
-        # НЕ ПРАЦЮЄ ЦЕЙ ТЕСТ!!!
         self.session.query().filter().order_by().first.return_value = None
         self.session.query().filter().order_by().first.return_value = Image(
             id=2,
@@ -84,7 +83,6 @@ class TestRatings(unittest.IsolatedAsyncioTestCase):
 
     async def test_calculate_rating(self):
         # test if it is possible to calculate rate
-        # НЕ ПРАЦЮЄ, ЩЕ ПОТРЕБУЄ ДОРОБКИ!!!
         self.session.query().filter().order_by().first.return_value = Rating(
             id=1,
             image_id=1,
