@@ -1,3 +1,4 @@
+python~=3.10
 pydantic~=1.10.7
 fastapi~=0.95.1
 sqlalchemy~=2.0.12
@@ -7,9 +8,12 @@ qrcode~=7.4.2
 cloudinary~=1.33.0
 libgravatar~=1.0.4
 uvicorn~=0.22.0
-alembic~=1.11.1
-jose~=1.0.0
+alembic~=1.10.4
+python-jose==3.3.0
 psycopg2-binary~=2.9.6
 python-dotenv~=1.0.0
 pytest~=7.3.1
 pillow~=9.5.0
+pytest-mock~=3.10.0
+pytest-asyncio~=0.21.0
+python-multipart~=0.0.6
