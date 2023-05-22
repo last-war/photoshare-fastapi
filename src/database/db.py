@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 
-SQLALCHEMY_DATABASE_URL = settings.database_url
+SQLALCHEMY_DATABASE_URL = settings.sqlalchemy_database_url
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 DBSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
