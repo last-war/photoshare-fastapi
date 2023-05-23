@@ -8,7 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+
 develop-eggs/
 dist/
 downloads/
@@ -69,12 +69,11 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/doctrees/
-docs/_build/_static/
-docs/_build/_templates/
-docs/_build/conf.py
-docs/_build/makefile
-docs/_build/make
+docs/_static/
+docs/_templates/
+docs/conf.py
+docs/makefile
+docs/make.bat
 
 # PyBuilder
 .pybuilder/
@@ -174,7 +173,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
 dist/
 downloads/
@@ -324,3 +322,5 @@ cython_debug/
 
 test.db
 tests/test.db
+
+/docs/docs/

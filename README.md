@@ -32,7 +32,7 @@ Command project from python web 9 stream GoIT
 * Search photos by tags.
 * Rate posts.
 * Admin and Moderator functions
-* To see other capabilites, check [our docs file](/docs/_build/html/index.html)
+* To see other capabilites, check [wiki](../../wiki)
 
 ## Our Team:
 Developer: [Olga Pasichnyuk](https://github.com/olgapasichnyuk)  
