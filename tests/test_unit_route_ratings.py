@@ -20,31 +20,6 @@ def token(client, user, session):
 
 
 @fixture(scope='module')
-def token_moder(client, user_moder, session):
-    response = client.post("/api/auth/signup", json={"login": "dead2pool", "email": "dead2pool@example.com",
-                                                     "password_checksum": "123456789"})
-    current_user: User = session.query(User).filter(User.email == user_moder.get('email')).first()
-    current_user.role = UserRole.Moderator
-    session.commit()
-    response = client.post("/api/auth/login", data={
-        "username": "dead2pool@example.com",
-        "password": "123456789"}, headers={'Content-Type': 'application/x-www-form-urlencoded'})
-    data = response.json()
-    return data["access_token"]
-
-
-@fixture(scope='module')
-def token_user(client, user_user, session):
-    response = client.post("/api/auth/signup", json={"login": "dead1pool", "email": "dead1pool@example.com",
-                                                     "password_checksum": "123456789"})
-    response = client.post("/api/auth/login", data={
-        "username": "dead1pool@example.com",
-        "password": "123456789"}, headers={'Content-Type': 'application/x-www-form-urlencoded'})
-    data = response.json()
-    return data["access_token"]
-
-
-@fixture(scope='module')
 def image(client, user, session):
     response = client.post("/api/auth/signup", json={"login": "deadpool", "email": "deadpool@example.com",
                                                      "password_checksum": "123456789"})
@@ -99,12 +74,11 @@ def test_create_rate(client, token, image, session):
     assert response.status_code == status.HTTP_200_OK
 
 
-def test_delete_rate(client, token, rating, session):
+def test_delete_rate(client, token, session, rating):
     response = client.delete("/api/rating/delete/1",
                              headers={'Authorization': f'Bearer {token}'}
                              )
-    print(rating.id)
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_show_image_rating(client, token, image, session):

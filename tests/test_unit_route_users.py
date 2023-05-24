@@ -8,14 +8,31 @@ from fastapi import status
 def token(client, user, session):
     response = client.post("/api/auth/signup",
                            json={"login": "deadpool",
-                                                     "email": "deadpool@example.com",
-                                                     "password_checksum": "123456789"})
+                                 "email": "deadpool@example.com",
+                                 "password_checksum": "123456789"})
     current_user: User = session.query(User).filter(User.email == user.get('email')).first()
     current_user.role = UserRole.Admin
     session.commit()
     response = client.post("/api/auth/login",
                            data={"username": "deadpool@example.com",
                                  "password": "123456789"},
+                           headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    data = response.json()
+    return data["access_token"]
+
+
+@fixture(scope='function')
+def token_second(client, user, session):
+    response = client.post("/api/auth/signup",
+                           json={"login": "TEST",
+                                 "email": "testpool@example.com",
+                                 "password_checksum": "testpassword"})
+    current_user: User = session.query(User).filter(User.email == 'testpool@example.com').first()
+    current_user.role = UserRole.Admin
+    session.commit()
+    response = client.post("/api/auth/login",
+                           data={"username": "testpool@example.com",
+                                 "password": "testpassword"},
                            headers={'Content-Type': 'application/x-www-form-urlencoded'})
     data = response.json()
     return data["access_token"]
@@ -40,9 +57,20 @@ def test_read_user_profile_by_username(client, token, user):
 
 def test_update_user(client, token):
     response = client.put("api/users/update_user",
+                          json={
+                              "id": 12121,
+                              "email": "deadpool@example.com",
+                              "updated_at": "2023-05-21T16:35:59.380Z",
+                              "user_pic_url": "string",
+                              "name": "string",
+                              "password_checksum": "123456789"},
+                          headers={"Authorization": f"Bearer {token}"},)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.put("api/users/update_user",
                           headers={"Authorization": f"Bearer {token}"},
                           json={
-                              "id": 0,
+                              "id": 1,
                               "email": "string",
                               "updated_at": "2023-05-21T16:35:59.380Z",
                               "user_pic_url": "string",
@@ -51,4 +79,36 @@ def test_update_user(client, token):
     assert response.status_code == status.HTTP_200_OK
 
     response = client.put("api/users/update_user")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_update_user_by_admin(client, token_second):
+    response = client.put("api/users/update_user_by_admin",
+                          json={"id": 100,
+                                "login": "deadpool_2",
+                                "name": "deadpool_2",
+                                "email": "testpool@example.com",
+                                "is_active": True,
+                                "role": 1,
+                                "user_pic_url": "",
+                                "password_checksum": "testpasswod",
+                                "updated_at": "2023-05-21T16:35:59.380Z",},
+                          headers={"Authorization": f"Bearer {token_second}"},)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.put("api/users/update_user_by_admin",
+                          json={"id": 1,
+                                "login": "TEST_USER",
+                                "name": "test3",
+                                "email": "testpool@example.com",
+                                "is_active": True,
+                                "role": 1,
+                                "user_pic_url": "",
+                                "password_checksum": "testpasswod",
+                                "updated_at": "2023-05-21T16:35:59.380Z",},
+                          headers={"Authorization": f"Bearer {token_second}"},)
+    assert response.status_code == status.HTTP_200_OK
+    print(response.json())
+
+    response = client.put("api/users/update_user_by_admin")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
