@@ -55,6 +55,27 @@ def test_read_user_profile_by_username(client, token, user):
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
+def test_change_role(client, user, token):
+    response = client.put("api/users/change_role",
+                          json={
+                              "id": 1000,
+                              "role": 2,
+                              },
+                          headers={"Authorization": f"Bearer {token}"},)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.put("api/users/change_role",
+                          json={
+                              "id": 1,
+                              "role": 2,
+                              },
+                          headers={"Authorization": f"Bearer {token}"},)
+    assert response.status_code == status.HTTP_200_OK
+
+    response = client.put("api/users/change_role")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
 def test_update_user(client, token):
     response = client.put("api/users/update_user",
                           json={
@@ -71,11 +92,11 @@ def test_update_user(client, token):
                           headers={"Authorization": f"Bearer {token}"},
                           json={
                               "id": 1,
-                              "email": "string",
+                              "email": "deadpool@example.com",
                               "updated_at": "2023-05-21T16:35:59.380Z",
-                              "user_pic_url": "string",
+                              "user_pic_url": "str495y2074y5804ying",
                               "name": "string",
-                              "password_checksum": "string"})
+                              "password_checksum": "123456789"})
     assert response.status_code == status.HTTP_200_OK
 
     response = client.put("api/users/update_user")
@@ -100,7 +121,7 @@ def test_update_user_by_admin(client, token_second):
                           json={"id": 1,
                                 "login": "TEST_USER",
                                 "name": "test3",
-                                "email": "testpool@example.com",
+                                "email": "test______test@example.com",
                                 "is_active": True,
                                 "role": 1,
                                 "user_pic_url": "",
@@ -112,3 +133,11 @@ def test_update_user_by_admin(client, token_second):
 
     response = client.put("api/users/update_user_by_admin")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_ban_user(client, user, token):
+    response = client.put(f"api/users/ban_user/?user_id=1", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_200_OK
+    response = client.put(f"api/users/ban_user/?user_id=100", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
