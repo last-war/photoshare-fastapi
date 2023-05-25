@@ -90,7 +90,7 @@ async def update_user(body: UserUpdate, user: User, db: Session) -> User | None:
     Returns:
         User | None: A user object or None
     """
-    user = db.query(User).filter(User.id == user.id).first()
+    user = db.query(User).filter(User.id == body.id).first()
     if user:
         user.name = body.name
         user.email = body.email

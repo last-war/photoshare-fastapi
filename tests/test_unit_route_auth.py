@@ -36,6 +36,12 @@ def test_login(client):
                            headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
     assert response.status_code == status.HTTP_200_OK
+    response = client.post("/api/auth/login",
+                           data={"username": "deadpool@example.com",
+                                 "password": "444"},
+                           headers={'Content-Type': 'application/x-www-form-urlencoded'})
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 def test_login_wrong_user_data(client):
@@ -50,3 +56,10 @@ def test_login_wrong_user_data(client):
 def test_logout(client, token):
     response = client.post("api/auth/logout", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == status.HTTP_200_OK
+
+
+def test_refresh_token(client, token):
+    response = client.get("api/auth/refresh_token", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == status.HTTP_200_OK
+    response = client.get("api/auth/refresh_token")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED

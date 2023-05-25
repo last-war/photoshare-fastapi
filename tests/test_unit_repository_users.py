@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 
 from src.database.models import User
 from src.repository.users import create_user, update_token, update_avatar, update_user, change_role, ban_user, \
-    get_user_profile
-from src.schemas.users import UserModel, UserUpdate, UserChangeRole, UserShow
+    get_user_profile, update_user_by_admin
+from src.schemas.users import UserModel, UserUpdate, UserChangeRole, UserShow, UserUpdateAdmin
 
 
 class TestUsersRepository(unittest.IsolatedAsyncioTestCase):
@@ -50,10 +50,16 @@ class TestUsersRepository(unittest.IsolatedAsyncioTestCase):
         body = UserChangeRole(id=self.test_user.id,
                               role=2,
                               updated_at=datetime.now())
-
         res = await change_role(body=body, user=self.test_user, db=self.session)
-
         self.assertEqual(res.role, body.role)
+
+    async def test_change_role_not_found(self):
+        body = UserChangeRole(id=100, role=2, updated_at=datetime.now())
+        self.session.query().filter().first.return_value = None
+        self.session.commit.return_value = None
+
+        result = await change_role(body=body, user=self.test_user, db=self.session)
+        self.assertIsNone(result)
 
     async def test_get_user_profile(self):
         user_profile = UserShow(
@@ -71,6 +77,65 @@ class TestUsersRepository(unittest.IsolatedAsyncioTestCase):
         res = await get_user_profile(login=self.test_user.login, db=self.session)
 
         self.assertEqual(res, user_profile)
+
+    async def test_ban_user(self):
+        res = await ban_user(user_id=1, db=self.session)
+        self.assertEqual(res.is_active, False)
+
+    async def test_ban_user_not_found(self):
+        self.session.query().filter().first.return_value = None
+        result = await ban_user(user_id=100, db=self.session)
+        self.assertIsNone(result)
+
+    async def test_update_user(self):
+        body = UserUpdate(id=self.test_user.id,
+                          login=self.test_user.login,
+                          email=self.test_user.email,
+                          role=self.test_user.role,
+                          user_pic_url=self.test_user.user_pic_url,
+                          name="test_update",
+                          password_checksum=self.test_user.password_checksum,
+                          is_active=self.test_user.is_active,
+                          )
+
+        self.session.query().filter().first.return_value = self.test_user
+        res = await update_user(body=body, user=self.test_user, db=self.session)
+        self.assertEqual(res.name, "test_update")
+
+    async def test_update_user_not_found(self):
+        body = UserUpdate(id=100, email=self.test_user.email, password_checksum=self.test_user.password_checksum)
+        self.session.query().filter().first.return_value = None
+        res = await update_user(body=body, user=self.test_user, db=self.session)
+        self.assertIsNone(res)
+
+    async def test_update_user_by_admin(self):
+        body = UserUpdateAdmin(id=self.test_user.id,
+                               login=self.test_user.login,
+                               email=self.test_user.email,
+                               role=self.test_user.role,
+                               user_pic_url=self.test_user.user_pic_url,
+                               name="test_update_admin",
+                               password_checksum=self.test_user.password_checksum,
+                               is_active=self.test_user.is_active,
+                               )
+
+        self.session.query().filter().first.return_value = self.test_user
+        res = await update_user_by_admin(body=body, user=self.test_user, db=self.session)
+        self.assertEqual(res.name, "test_update_admin")
+
+    async def test_update_user_by_admin_not_found(self):
+        body = UserUpdateAdmin(id=self.test_user.id,
+                               login=self.test_user.login,
+                               email=self.test_user.email,
+                               role=self.test_user.role,
+                               user_pic_url=self.test_user.user_pic_url,
+                               name="test_update_admin",
+                               password_checksum=self.test_user.password_checksum,
+                               is_active=self.test_user.is_active,
+                               )
+        self.session.query().filter().first.return_value = None
+        res = await update_user_by_admin(body=body, user=self.test_user, db=self.session)
+        self.assertIsNone(res)
 
 
 if __name__ == '__main__':
